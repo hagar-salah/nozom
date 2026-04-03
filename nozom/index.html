@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GIS Hub | المحاضرات التفاعلية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --gold: #c8892a;
+      --deep-brown: #7a3f0a;
+      --cream: #fdf6e3;
+      --dark-bg: #1a1008;
+      --card-bg: #fff9f0;
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--cream);
+      color: #2a1a08;
+      line-height: 1.6;
+    }
+
+    /* Navbar بسيط */
+    .navbar {
+      background: white;
+      padding: 15px 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--gold);
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--deep-brown);
+    }
+    .logo span {
+      color: var(--gold);
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #5a3a1a;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 20px;
+      transition: 0.2s;
+    }
+    .nav-links a:hover {
+      background: var(--gold);
+      color: white;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(135deg, #fff5e6, #fdebd0);
+    }
+    .hero h1 {
+      font-family: 'Amiri', serif;
+      font-size: 2.5rem;
+      color: var(--deep-brown);
+    }
+    .hero p {
+      max-width: 600px;
+      margin: 15px auto;
+      color: #6b4c2a;
+    }
+
+    /* Grid البطاقات الرئيسي */
+    .lectures-grid {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    /* Card تصميم البطاقة (بسيط وسهل النسخ) */
+    .lecture-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      width: 350px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(200,137,42,0.2);
+      display: flex;
+      flex-direction: column;
+    }
+    .lecture-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+      background: #fef3e4;
+      padding: 25px 25px 15px;
+      border-bottom: 3px solid var(--gold);
+    }
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .lecture-card h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--deep-brown);
+    }
+    .lecture-card .badge {
+      font-size: 0.75rem;
+      color: var(--gold);
+      background: #fff0e0;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 50px;
+      margin: 12px 0 5px;
+    }
+    .card-body {
+      padding: 25px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .topic-preview {
+      list-style: none;
+      margin-bottom: 25px;
+    }
+    .topic-preview li {
+      font-size: 0.85rem;
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px dashed #f0e0ce;
+    }
+    .topic-preview li::before {
+      content: "📌";
+      color: var(--gold);
+      font-size: 0.7rem;
+    }
+    .btn {
+      background: var(--gold);
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      margin-top: auto;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+      display: block;
+    }
+    .btn:hover {
+      background: #a56e1f;
+      transform: scale(0.98);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: var(--dark-bg);
+      color: #bcac8c;
+      margin-top: 40px;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 700px) {
+      .navbar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .lecture-card {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- شريط التنقل (سهل الإضافة لبقية الصفحات) -->
+  <div class="navbar">
+    <div class="logo">GIS <span>Hub</span></div>
+    <div class="nav-links">
+      <a href="index.html">🏠 الرئيسية</a>
+      <a href="index2.html">🖥️ المحاضرة 1 (تقني)</a>
+      <a href="index3.html">🗺️ المحاضرة 2 (علمي/بشري)</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>📚 مبادئ نظم المعلومات الجغرافية</h1>
+    <p>اختر المحاضرة التي تريد دراستها. تم تصميم هذه البطاقات لتكون قابلة للإضافة بسهولة.</p>
+  </div>
+
+  <div class="lectures-grid">
+    
+    <!-- ============================================= -->
+    <!-- بطاقة المحاضرة الأولى (الموجودة في index2.html) -->
+    <!-- ============================================= -->
+    <div class="lecture-card">
+      <div class="card-header">
+        <div class="card-icon">🖥️⚙️</div>
+        <h3>المتطلبات الفنية</h3>
+        <div class="badge">Hardware & Software</div>
+      </div>
+      <div class="card-body">
+        <ul class="topic-preview">
+          <li>أجهزة الإدخال (Scanner, Digitizer)</li>
+          <li>وحدة المعالجة والتخزين</li>
+          <li>شروط البرامج التطبيقية</li>
+          <li>التحليل المكاني المتقدم</li>
+        </ul>
+        <a href="index2.html" class="btn">📖 دخول المحاضرة</a>
+      </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- بطاقة المحاضرة الثانية (الموجودة في index3.html) -->
+    <!-- ============================================= -->
+    <div class="lecture-card">
+      <div class="card-header">
+        <div class="card-icon">🗺️🧑‍🏫</div>
+        <h3>المتطلبات العلمية والبشرية</h3>
+        <div class="badge">Data & Human Resources</div>
+      </div>
+      <div class="card-body">
+        <ul class="topic-preview">
+          <li>مصادر البيانات (خرائط، استشعار عن بعد)</li>
+          <li>نظم GPS و DEM</li>
+          <li>الكوادر البشرية (محلل، مدير، مبرمج)</li>
+          <li>مستويات التأهيل الثلاثة</li>
+        </ul>
+        <a href="index3.html" class="btn">📖 دخول المحاضرة</a>
+      </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- 🔴 مثال توضيحي: إذا أردت إضافة محاضرة جديدة، انسخ هذا القالب وألصقه هنا -->
+    <!-- ============================================= -->
+    <!-- 
+    <div class="lecture-card">
+      <div class="card-header">
+        <div class="card-icon">🌟</div>
+        <h3>اسم المحاضرة الجديدة</h3>
+        <div class="badge">تخصص جديد</div>
+      </div>
+      <div class="card-body">
+        <ul class="topic-preview">
+          <li>نقطة أولى مختصرة</li>
+          <li>نقطة ثانية مختصرة</li>
+          <li>نقطة ثالثة مختصرة</li>
+        </ul>
+        <a href="page4.html" class="btn">📖 دخول المحاضرة</a>
+      </div>
+    </div>
+    -->
+
+  </div>
+
+  <footer>
+    <p>📍 نظام متكامل لشرح نظم المعلومات الجغرافية | يمكنك إضافة المزيد من المحاضرات بنفس النمط</p>
+  </footer>
+</body>
+</html>
