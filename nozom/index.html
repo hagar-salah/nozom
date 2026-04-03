@@ -19,6 +19,8 @@
       --dark-bg: #1a1008;
       --card-bg: #fff9f0;
       --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      --purple-accent: #8b5cf6;
+      --purple-light: #f0eaff;
     }
 
     body {
@@ -50,6 +52,7 @@
     .nav-links {
       display: flex;
       gap: 20px;
+      flex-wrap: wrap;
     }
     .nav-links a {
       text-decoration: none;
@@ -173,6 +176,20 @@
       transform: scale(0.98);
     }
 
+    /* تنسيق خاص للبطاقة الجديدة (لمسة مميزة) */
+    .lecture-card.new-lecture .card-header {
+      background: linear-gradient(135deg, #fef3e4, #f3eaff);
+      border-bottom: 3px solid var(--purple-accent);
+    }
+    .lecture-card.new-lecture .badge {
+      background: #ede6ff;
+      color: var(--purple-accent);
+    }
+    .lecture-card.new-lecture .topic-preview li::before {
+      content: "🌟";
+      color: var(--purple-accent);
+    }
+
     footer {
       text-align: center;
       padding: 30px;
@@ -203,6 +220,7 @@
       <a href="index.html">🏠 الرئيسية</a>
       <a href="index2.html">🖥️ المحاضرة 1 (تقني)</a>
       <a href="index3.html">🗺️ المحاضرة 2 (علمي/بشري)</a>
+      <a href="index4.html">📖 المحاضرة 3 (التطبيقات)</a>
     </div>
   </div>
 
@@ -254,30 +272,31 @@
     </div>
 
     <!-- ============================================= -->
-    <!-- 🔴 مثال توضيحي: إذا أردت إضافة محاضرة جديدة، انسخ هذا القالب وألصقه هنا -->
+    <!-- 🔥 بطاقة المحاضرة الثالثة (الجديدة — تطبيقات GIS) -->
     <!-- ============================================= -->
-    <!-- 
-    <div class="lecture-card">
+    <div class="lecture-card new-lecture">
       <div class="card-header">
-        <div class="card-icon">🌟</div>
-        <h3>اسم المحاضرة الجديدة</h3>
-        <div class="badge">تخصص جديد</div>
+        <div class="card-icon">🌍📊</div>
+        <h3>تطبيقات نظم المعلومات الجغرافية</h3>
+        <div class="badge">Applications & GIScience</div>
       </div>
       <div class="card-body">
         <ul class="topic-preview">
-          <li>نقطة أولى مختصرة</li>
-          <li>نقطة ثانية مختصرة</li>
-          <li>نقطة ثالثة مختصرة</li>
+          <li>المفاهيم الأساسية و GIS vs GIScience</li>
+          <li>المكونات الخمسة (بيانات، أجهزة، برمجيات، أفراد، إجراءات)</li>
+          <li>أنواع البيانات: Vector, Raster, Geodatabases</li>
+          <li>الوظائف الأربع (إدخال، تخزين، تحليل، إخراج)</li>
+          <li>٧ مجالات تطبيقية + التحديات والاتجاهات الحديثة</li>
+          <li>بنك أسئلة تفاعلي (٢٠ سؤالاً)</li>
         </ul>
-        <a href="page4.html" class="btn">📖 دخول المحاضرة</a>
+        <a href="index4.html" class="btn">📖 دخول المحاضرة</a>
       </div>
     </div>
-    -->
 
   </div>
 
   <footer>
-    <p></p>
+    <p>📍 جميع الحقوق محفوظة © GIS Hub | منصة تعليمية متخصصة في نظم المعلومات الجغرافية</p>
   </footer>
 </body>
 </html>
