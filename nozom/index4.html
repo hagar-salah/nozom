@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المحاضرة الأولى — تطبيقات نظم المعلومات الجغرافية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f1a; --surface: #141626; --surface2: #1c1f35;
+    --border: rgba(255,255,255,0.07); --text: #e8eaf6; --muted: #8b90b8;
+    --teal: #00d4aa; --teal-bg: rgba(0,212,170,0.08);
+    --amber: #f5a623; --amber-bg: rgba(245,166,35,0.08);
+    --coral: #ff6b6b; --coral-bg: rgba(255,107,107,0.08);
+    --blue: #4a9eff; --blue-bg: rgba(74,158,255,0.08);
+    --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.08);
+    --pink: #f472b6; --pink-bg: rgba(244,114,182,0.08);
+    --green: #4ade80; --green-bg: rgba(74,222,128,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+  .hero { background: linear-gradient(135deg, #0d0f1a 0%, #1a0f30 50%, #0d0f1a 100%); padding: 60px 40px 50px; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(167,139,250,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero-label { display: inline-block; font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 3px; color: var(--purple); text-transform: uppercase; border: 1px solid rgba(167,139,250,0.3); padding: 5px 16px; border-radius: 20px; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(26px, 5vw, 50px); font-weight: 900; line-height: 1.2; background: linear-gradient(135deg, #fff 0%, var(--purple) 60%, var(--blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+  .hero p { color: var(--muted); font-size: 15px; max-width: 640px; margin: 0 auto 30px; line-height: 1.8; font-family: 'Tajawal', sans-serif; }
+  .hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 900; color: var(--purple); display: block; }
+  .stat-label { font-size: 12px; color: var(--muted); font-family: 'Tajawal', sans-serif; }
+
+  .tabs-bar { display: flex; gap: 8px; padding: 20px 24px 0; max-width: 1100px; margin: 0 auto; flex-wrap: wrap; }
+  .tab-btn { padding: 10px 22px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .tab-btn:hover { background: var(--surface2); color: var(--text); }
+  .tab-btn.active { background: var(--purple-bg); border-color: rgba(167,139,250,0.4); color: var(--purple); }
+  .tab-btn.coral-tab.active { background: var(--coral-bg); border-color: rgba(255,107,107,0.4); color: var(--coral); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px 80px; }
+
+  .section-card { margin-bottom: 20px; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); overflow: hidden; transition: border-color 0.3s, box-shadow 0.3s; }
+  .section-card:hover { box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 20px 60px -20px rgba(0,0,0,0.5); }
+  .section-card.teal   { border-color: rgba(0,212,170,0.2); }
+  .section-card.amber  { border-color: rgba(245,166,35,0.2); }
+  .section-card.coral  { border-color: rgba(255,107,107,0.2); }
+  .section-card.blue   { border-color: rgba(74,158,255,0.2); }
+  .section-card.purple { border-color: rgba(167,139,250,0.2); }
+  .section-card.pink   { border-color: rgba(244,114,182,0.2); }
+  .section-card.green  { border-color: rgba(74,222,128,0.2); }
+
+  .section-header { display: flex; align-items: center; gap: 16px; padding: 22px 28px; cursor: pointer; user-select: none; transition: background 0.2s; }
+  .section-header:hover { background: rgba(255,255,255,0.02); }
+  .section-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .teal   .section-icon { background: rgba(0,212,170,0.12); color: var(--teal); }
+  .amber  .section-icon { background: rgba(245,166,35,0.12); color: var(--amber); }
+  .coral  .section-icon { background: rgba(255,107,107,0.12); color: var(--coral); }
+  .blue   .section-icon { background: rgba(74,158,255,0.12); color: var(--blue); }
+  .purple .section-icon { background: rgba(167,139,250,0.12); color: var(--purple); }
+  .pink   .section-icon { background: rgba(244,114,182,0.12); color: var(--pink); }
+  .green  .section-icon { background: rgba(74,222,128,0.12); color: var(--green); }
+
+  .section-meta { flex: 1; }
+  .section-number { font-size: 11px; font-weight: 600; letter-spacing: 2px; font-family: 'Tajawal', sans-serif; opacity: 0.55; margin-bottom: 4px; }
+  .section-title { font-size: 19px; font-weight: 700; line-height: 1.3; }
+  .section-subtitle { font-size: 13px; color: var(--muted); margin-top: 3px; font-family: 'Tajawal', sans-serif; }
+  .chevron { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; color: var(--muted); transition: transform 0.3s, background 0.2s; font-size: 14px; flex-shrink: 0; }
+  .section-card.open .chevron { transform: rotate(180deg); background: rgba(255,255,255,0.1); color: var(--text); }
+  .section-body { display: none; padding: 0 28px 28px; border-top: 1px solid var(--border); animation: fadeIn 0.25s ease; }
+  .section-card.open .section-body { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+
+  .intro-text { color: var(--muted); font-family: 'Tajawal', sans-serif; font-size: 14px; line-height: 1.85; padding: 18px 0 6px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .subsection { margin-bottom: 24px; }
+  .subsection-title { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; font-family: 'Tajawal', sans-serif; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .card-item { background: var(--surface2); border-radius: 12px; padding: 16px; border: 1px solid var(--border); transition: transform 0.2s, border-color 0.2s; }
+  .card-item:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.12); }
+  .card-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 3px 9px; border-radius: 6px; margin-bottom: 8px; font-family: 'Tajawal', sans-serif; }
+  .c-teal   { background: rgba(0,212,170,0.15); color: var(--teal); }
+  .c-amber  { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .c-coral  { background: rgba(255,107,107,0.15); color: var(--coral); }
+  .c-blue   { background: rgba(74,158,255,0.15); color: var(--blue); }
+  .c-purple { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .c-pink   { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .c-green  { background: rgba(74,222,128,0.15); color: var(--green); }
+  .card-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.7; font-family: 'Tajawal', sans-serif; }
+
+  .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-family: 'Tajawal', sans-serif; font-size: 13px; }
+  .compare-table th { background: var(--surface2); padding: 10px 14px; font-weight: 700; color: var(--purple); border-bottom: 1px solid var(--border); text-align: right; }
+  .compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--muted); line-height: 1.6; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child { color: var(--text); font-weight: 600; }
+
+  .point-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .point-list li { padding: 10px 14px; border-right: 3px solid; background: var(--surface2); border-radius: 8px; font-size: 14px; line-height: 1.6; font-family: 'Tajawal', sans-serif; }
+  .teal-list li { border-right-color: var(--teal); }
+  .amber-list li { border-right-color: var(--amber); }
+  .blue-list  li { border-right-color: var(--blue); }
+  .purple-list li { border-right-color: var(--purple); }
+  .coral-list li { border-right-color: var(--coral); }
+  .green-list li { border-right-color: var(--green); }
+
+  .info-box { display: flex; gap: 12px; padding: 14px 16px; border-radius: 10px; margin-top: 12px; align-items: flex-start; }
+  .info-box-icon { font-size: 20px; flex-shrink: 0; }
+  .info-box-text { font-size: 13px; line-height: 1.7; font-family: 'Tajawal', sans-serif; }
+
+  .flow { display: flex; flex-direction: column; }
+  .flow-item { display: flex; gap: 16px; }
+  .flow-last .flow-line { display: none; }
+  .flow-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .flow-num { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--purple); flex-shrink: 0; }
+  .flow-line { width: 1px; flex: 1; background: var(--border); min-height: 16px; }
+  .flow-content { padding: 4px 0 20px; flex: 1; }
+  .flow-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .flow-desc { font-size: 13px; color: var(--muted); line-height: 1.7; font-family: 'Tajawal', sans-serif; }
+
+  .summary { background: var(--surface2); border-radius: 16px; border: 1px solid var(--border); padding: 28px; margin-bottom: 20px; }
+  .summary h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .summary-items { display: flex; flex-direction: column; gap: 10px; }
+  .summary-item { display: flex; gap: 12px; align-items: flex-start; }
+  .summary-item-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .summary-item-text { font-size: 14px; line-height: 1.7; font-family: 'Tajawal', sans-serif; }
+
+  .quiz-intro { text-align: center; padding: 30px 20px 10px; }
+  .quiz-intro h2 { font-size: 26px; font-weight: 900; margin-bottom: 10px; background: linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .quiz-intro p { color: var(--muted); font-family: 'Tajawal', sans-serif; font-size: 14px; }
+  .quiz-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+  .quiz-card:hover { border-color: rgba(255,255,255,0.1); }
+  .q-header { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+  .q-num { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0; font-family: 'Tajawal', sans-serif; }
+  .q-type-badge { font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; font-family: 'Tajawal', sans-serif; }
+  .badge-mcq   { background: var(--blue-bg);   color: var(--blue);   border: 1px solid rgba(74,158,255,0.2); }
+  .badge-tf    { background: var(--teal-bg);   color: var(--teal);   border: 1px solid rgba(0,212,170,0.2); }
+  .badge-short { background: var(--amber-bg);  color: var(--amber);  border: 1px solid rgba(245,166,35,0.2); }
+  .badge-essay { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .q-text { font-size: 16px; font-weight: 700; line-height: 1.5; flex: 1; }
+  .q-source { font-size: 11px; color: var(--muted); font-family: 'Tajawal', sans-serif; margin-top: 2px; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .option { display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface2); cursor: pointer; transition: all 0.2s; font-family: 'Tajawal', sans-serif; font-size: 14px; user-select: none; }
+  .option:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+  .option.selected { border-color: rgba(167,139,250,0.4); background: var(--purple-bg); }
+  .option.correct  { border-color: rgba(0,212,170,0.5); background: var(--teal-bg); color: var(--teal); }
+  .option.wrong    { border-color: rgba(255,107,107,0.5); background: var(--coral-bg); color: var(--coral); }
+  .opt-letter { width: 28px; height: 28px; border-radius: 7px; background: rgba(255,255,255,0.07); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .answer-reveal { display: none; padding: 12px 16px; border-radius: 10px; font-family: 'Tajawal', sans-serif; font-size: 14px; line-height: 1.7; animation: fadeIn 0.2s ease; }
+  .answer-reveal.show { display: block; }
+  .answer-reveal.correct-ans { background: var(--teal-bg); border: 1px solid rgba(0,212,170,0.2); color: var(--teal); }
+  .answer-reveal.info-ans    { background: var(--purple-bg); border: 1px solid rgba(167,139,250,0.2); color: var(--purple); }
+  .btn-check { margin-top: 12px; padding: 9px 22px; border-radius: 10px; border: 1px solid rgba(167,139,250,0.3); background: var(--purple-bg); color: var(--purple); font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-check:hover { background: rgba(167,139,250,0.15); }
+  .btn-show { margin-top: 12px; padding: 9px 22px; border-radius: 10px; border: 1px solid rgba(0,212,170,0.3); background: var(--teal-bg); color: var(--teal); font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-show:hover { background: rgba(0,212,170,0.15); }
+  .score-bar { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 20px 28px; display: flex; align-items: center; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+  .score-label { font-family: 'Tajawal', sans-serif; font-size: 14px; color: var(--muted); flex: 1; }
+  .score-display { font-size: 26px; font-weight: 900; color: var(--purple); }
+  .btn-reset { padding: 8px 20px; border-radius: 9px; border: 1px solid rgba(255,107,107,0.3); background: var(--coral-bg); color: var(--coral); font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .lec-divider { display: flex; align-items: center; gap: 14px; margin: 10px 0 20px; }
+  .lec-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .lec-divider-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--muted); font-family: 'Tajawal', sans-serif; padding: 4px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface2); }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 20px 36px; }
+    .section-header { padding: 16px 18px; }
+    .section-body { padding: 0 18px 20px; }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">LECTURE 01 • المحاضرة الأولى</div>
+  <h1>تطبيقات نظم المعلومات<br>الجغرافية</h1>
+  <p>المفاهيم الأساسية — المكونات — أنواع البيانات — الوظائف — التطبيقات — التحديات — الاتجاهات الحديثة</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">٥</span><span class="stat-label">مكونات GIS</span></div>
+    <div class="stat"><span class="stat-num">٤</span><span class="stat-label">وظائف رئيسية</span></div>
+    <div class="stat"><span class="stat-num">٢٠</span><span class="stat-label">سؤال تفاعلي</span></div>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('content',this)">📘 ملخص المحاضرة</button>
+  <button class="tab-btn coral-tab" onclick="switchTab('quiz',this)">✏️ بنك الأسئلة</button>
+</div>
+
+<!-- TAB CONTENT -->
+<div class="tab-panel active" id="tab-content">
+<div class="container">
+
+  <!-- S1: تعريف GIS -->
+  <div class="section-card purple open" id="s1">
+    <div class="section-header" onclick="toggle('s1')">
+      <div class="section-icon">🌐</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 01 • أولاً</div>
+        <div class="section-title">تعريف نظم المعلومات الجغرافية والفرق بين GIS و GIScience</div>
+        <div class="section-subtitle">التعريف العام + البعد العلمي + المقارنة</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <p class="intro-text">نظم المعلومات الجغرافية نظام حاسوبي متكامل يجمع بين الأجهزة والبرمجيات والبيانات والأفراد والإجراءات بهدف جمع وتخزين وإدارة وتحليل وعرض البيانات الجغرافية والمكانية.</p>
+      <div class="subsection">
+        <div class="subsection-title">الفرق بين GIS و GIScience</div>
+        <table class="compare-table">
+          <tr><th>البند</th><th>GIS</th><th>GIScience</th></tr>
+          <tr><td>الطبيعة</td><td>الأداة والتطبيق العملي</td><td>الجانب العلمي والنظري</td></tr>
+          <tr><td>المحتوى</td><td>البرامج والخرائط والتحليل</td><td>طرق التمثيل والتحليل المكاني والمشكلات المنهجية</td></tr>
+          <tr><td>النطاق</td><td>جزء من GIScience — يركز على النظم والتطبيقات الحاسوبية</td><td>أشمل وأوسع — يشمل كل ما يتعلق بالمعلومات ذات البُعد المكاني</td></tr>
+          <tr><td>الهدف</td><td>كيفية استخدام وتطبيق الأداة</td><td>يدرس الأسس النظرية التي يقوم عليها بناء GIS</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: مكونات GIS -->
+  <div class="section-card teal" id="s2">
+    <div class="section-header" onclick="toggle('s2')">
+      <div class="section-icon">🔩</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 02 • ثانياً</div>
+        <div class="section-title">مكونات نظم المعلومات الجغرافية الخمسة</div>
+        <div class="section-subtitle">البيانات — الأجهزة — البرمجيات — الأفراد — الإجراءات</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="cards-grid">
+        <div class="card-item">
+          <div class="card-tag c-teal">١</div>
+          <div class="card-name">🗺️ البيانات الجغرافية</div>
+          <div class="card-desc"><strong>مكانية (Spatial):</strong> نقاط، خطوط، مضلعات، شبكيات.<br><strong>وصفية (Attribute):</strong> خصائص مرتبطة بالبيانات المكانية (اسم المدينة، عدد السكان).</div>
+        </div>
+        <div class="card-item">
+          <div class="card-tag c-blue">٢</div>
+          <div class="card-name">💻 الأجهزة</div>
+          <div class="card-desc">حواسيب قوية لمعالجة البيانات + وحدات إدخال (GPS، ماسحات، طائرات مُسيَّرة) + وحدات إخراج (طابعات، شاشات عالية الدقة).</div>
+        </div>
+        <div class="card-item">
+          <div class="card-tag c-coral">٣</div>
+          <div class="card-name">💾 البرمجيات</div>
+          <div class="card-desc"><strong>تجارية:</strong> ArcGIS، MapInfo.<br><strong>مفتوحة المصدر:</strong> QGIS.<br><strong>قواعد بيانات مكانية:</strong> Oracle Spatial، PostGIS.</div>
+        </div>
+        <div class="card-item">
+          <div class="card-tag c-amber">٤</div>
+          <div class="card-name">👥 الأفراد</div>
+          <div class="card-desc">الباحثون والمحللون + صناع القرار + المطورون والمبرمجون.</div>
+        </div>
+        <div class="card-item">
+          <div class="card-tag c-green">٥</div>
+          <div class="card-name">📋 الإجراءات والسياسات</div>
+          <div class="card-desc">طرق جمع البيانات + معايير الجودة والتحديث + آليات مشاركة البيانات والتشريعات المرتبطة.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: أنواع البيانات -->
+  <div class="section-card blue" id="s3">
+    <div class="section-header" onclick="toggle('s3')">
+      <div class="section-icon">📊</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 03 • ثالثاً</div>
+        <div class="section-title">أنواع البيانات في GIS</div>
+        <div class="section-subtitle">Vector Model — Raster Model — Geodatabases</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="cards-grid">
+        <div class="card-item">
+          <div class="card-tag c-blue">Vector Model</div>
+          <div class="card-name">📐 النموذج الاتجاهي</div>
+          <div class="card-desc">يستخدم النقاط والخطوط والمضلعات. مثالي لتمثيل الكيانات المنفصلة مثل المباني والطرق.</div>
+        </div>
+        <div class="card-item">
+          <div class="card-tag c-teal">Raster Model</div>
+          <div class="card-name">🔲 النموذج الشبكي</div>
+          <div class="card-desc">يتكون من شبكة من الخلايا (Pixels). مثالي لتمثيل الظواهر المستمرة مثل الارتفاعات ودرجة الحرارة.</div>
+        </div>
+        <div class="card-item">
+          <div class="card-tag c-coral">Geodatabases</div>
+          <div class="card-name">🗄️ قواعد البيانات الجغرافية</div>
+          <div class="card-desc">نظم متكاملة لتخزين وإدارة البيانات المكانية والوصفية معاً.</div>
+        </div>
+      </div>
+      <div class="subsection" style="margin-top:20px;">
+        <div class="subsection-title">علم المعلومات المكانية — أنواع البيانات المكانية</div>
+        <ul class="point-list blue-list">
+          <li><strong>النقاط:</strong> مثل مواقع الآبار</li>
+          <li><strong>الخطوط:</strong> مثل الطرق والأنهار</li>
+          <li><strong>المضلعات/المساحات:</strong> مثل حدود الدول أو الغابات</li>
+          <li><strong>البيانات الشبكية:</strong> مثل صور الأقمار الصناعية</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: وظائف GIS -->
+  <div class="section-card amber" id="s4">
+    <div class="section-header" onclick="toggle('s4')">
+      <div class="section-icon">⚙️</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 04 • رابعاً</div>
+        <div class="section-title">وظائف نظم المعلومات الجغرافية الأربع</div>
+        <div class="section-subtitle">إدخال — تخزين — معالجة وتحليل — إخراج</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="flow">
+        <div class="flow-item">
+          <div class="flow-left"><div class="flow-num">١</div><div class="flow-line"></div></div>
+          <div class="flow-content">
+            <div class="flow-name">إدخال المعلومات إلى النظام</div>
+            <div class="flow-desc">أول وظيفة وأصعب المراحل وأكثرها عرضة للخطأ. تكلفتها قد تصل لـ 70% من التكلفة الإجمالية. تشمل: جمع المعلومات + التأكد من صحتها + تحريرها وتحليلها + استيرادها وتصديرها. المصادر: خرائط، مسح ميداني، صور جوية، استشعار عن بُعد.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left"><div class="flow-num">٢</div><div class="flow-line"></div></div>
+          <div class="flow-content">
+            <div class="flow-name">تخزين المعلومات في النظام</div>
+            <div class="flow-desc">من أهم مميزات GIS تخزين المعلومات في <strong>طبقات</strong>. سهل دمج المعلومات لكن صعب تفريق المركّبة. أنواع التخزين: أساسي + مؤقت + نسخ احتياطية. التخزين المكاني (خطي) أكثر إتاحةً للتحليل من الشبكي.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left"><div class="flow-num">٣</div><div class="flow-line"></div></div>
+          <div class="flow-content">
+            <div class="flow-name">معالجة وتحليل المعلومات</div>
+            <div class="flow-desc">أهم العمليات: الوظائف الكارتوجرافية (تغيير مقياس، تحويل صيغ، تغيير مسقط، إضافة مفتاح ورموز) + الاستعالم والبحث (أفضل وظيفة عرفت بها GIS) + قياس المعالم + التحليل الإحصائي.</div>
+          </div>
+        </div>
+        <div class="flow-item flow-last">
+          <div class="flow-left"><div class="flow-num">٤</div><div class="flow-line"></div></div>
+          <div class="flow-content">
+            <div class="flow-name">إخراج النتائج</div>
+            <div class="flow-desc">خرائط ورقية ورقمية + الخرائط التفاعلية على الويب (WebGIS) + التمثيل ثلاثي الأبعاد (3D GIS) + جداول + تقارير + صفحات الإنترنت.</div>
+          </div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">تصنيف البيانات عند الإدخال</div>
+        <div class="cards-grid">
+          <div class="card-item">
+            <div class="card-tag c-teal">نوع ١</div>
+            <div class="card-name">🌿 المعالم الطبيعية</div>
+            <div class="card-desc">يصعب تحديد حدودها بدقة: الغابات، حدود الجبال والهضاب، الأنهار والبحار والأودية، أشكال النباتات.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-tag c-amber">نوع ٢</div>
+            <div class="card-name">🏗️ المعالم الاصطناعية</div>
+            <div class="card-desc">حدود واضحة محددة: مسارات الطرق والسكك الحديدية، الأبنية والمنشآت، الحدود الدولية والإقليمية.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5: التطبيقات + المميزات + التحديات + الاتجاهات -->
+  <div class="section-card coral" id="s5">
+    <div class="section-header" onclick="toggle('s5')">
+      <div class="section-icon">🌍</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 05 • خامساً</div>
+        <div class="section-title">التطبيقات + المميزات + التحديات + الاتجاهات الحديثة</div>
+        <div class="section-subtitle">٧ مجالات تطبيقية + ٤ مميزات + ٥ تحديات + ٦ اتجاهات</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="subsection">
+        <div class="subsection-title">التطبيقات — ٧ مجالات رئيسية</div>
+        <div class="cards-grid">
+          <div class="card-item"><div class="card-tag c-coral">١</div><div class="card-name">🏙️ التخطيط العمراني</div><div class="card-desc">اختيار مواقع الخدمات، تخطيط استخدامات الأراضي.</div></div>
+          <div class="card-item"><div class="card-tag c-coral">٢</div><div class="card-name">🌿 الموارد الطبيعية</div><div class="card-desc">إدارة الغابات، المياه، الأراضي الزراعية.</div></div>
+          <div class="card-item"><div class="card-tag c-coral">٣</div><div class="card-name">🌡️ البيئة</div><div class="card-desc">متابعة التغيرات المناخية، التلوث، التصحر.</div></div>
+          <div class="card-item"><div class="card-tag c-coral">٤</div><div class="card-name">🚗 النقل والمواصلات</div><div class="card-desc">أنظمة الملاحة، تخطيط الطرق، إدارة المرور.</div></div>
+          <div class="card-item"><div class="card-tag c-coral">٥</div><div class="card-name">🏥 الصحة العامة</div><div class="card-desc">خرائط انتشار الأمراض، توزيع الخدمات الصحية.</div></div>
+          <div class="card-item"><div class="card-tag c-coral">٦</div><div class="card-name">🛡️ الدفاع والأمن</div><div class="card-desc">الاستطلاع الجغرافي، مراقبة الحدود.</div></div>
+          <div class="card-item"><div class="card-tag c-coral">٧</div><div class="card-name">🆘 إدارة الكوارث</div><div class="card-desc">خرائط الفيضانات والحرائق والزلازل.</div></div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">المميزات الرئيسية لـ GIS</div>
+        <ul class="point-list teal-list">
+          <li>التكامل بين مصادر بيانات مختلفة</li>
+          <li>القدرة على تحليل البيانات المكانية والزمنية</li>
+          <li>دعم عملية اتخاذ القرار المبني على الأدلة</li>
+          <li>توفير خرائط تفاعلية سهلة الفهم والاستخدام</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">التحديات التي تواجه GIS</div>
+        <ul class="point-list amber-list">
+          <li><strong>جودة البيانات:</strong> الدقة — التحديث — اكتمال البيانات</li>
+          <li><strong>الخصوصية وأمن البيانات:</strong> خاصة البيانات المرتبطة بالأفراد</li>
+          <li><strong>التكلفة:</strong> تكلفة الأجهزة والبرامج والتدريب</li>
+          <li><strong>التكامل البيني:</strong> مشكلة توافق البيانات والبرامج المختلفة</li>
+          <li><strong>التغير السريع في التكنولوجيا:</strong> الحاجة للتحديث المستمر</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">الاتجاهات الحديثة في GIS</div>
+        <div class="cards-grid">
+          <div class="card-item"><div class="card-tag c-purple">AI</div><div class="card-name">🤖 الذكاء الاصطناعي</div><div class="card-desc">دمج تقنيات AI في التحليل المكاني والتعلم الآلي.</div></div>
+          <div class="card-item"><div class="card-tag c-purple">Cloud</div><div class="card-name">☁️ الحوسبة السحابية</div><div class="card-desc">Cloud GIS — معالجة البيانات المكانية عبر الإنترنت.</div></div>
+          <div class="card-item"><div class="card-tag c-purple">Big Data</div><div class="card-name">📡 البيانات الضخمة</div><div class="card-desc">تحليل البيانات الضخمة من الهواتف الذكية والأقمار الصناعية.</div></div>
+          <div class="card-item"><div class="card-tag c-purple">WebGIS</div><div class="card-name">🌐 الخرائط التفاعلية</div><div class="card-desc">GIS على الإنترنت — الخرائط التفاعلية للمستخدمين.</div></div>
+          <div class="card-item"><div class="card-tag c-purple">3D/4D</div><div class="card-name">🏔️ ثلاثي وربُعي الأبعاد</div><div class="card-desc">إدخال البعد الزمني مع التحليل المكاني.</div></div>
+          <div class="card-item"><div class="card-tag c-purple">IoT</div><div class="card-name">📱 إنترنت الأشياء</div><div class="card-desc">تكامل GIS مع المستشعرات الذكية وإنترنت الأشياء.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: علم المعلومات المكانية -->
+  <div class="section-card green" id="s6">
+    <div class="section-header" onclick="toggle('s6')">
+      <div class="section-icon">🔬</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 06 • سادساً</div>
+        <div class="section-title">علم المعلومات المكانية Spatial Information Science</div>
+        <div class="section-subtitle">المفهوم + المجالات الخمسة + الأهمية + العلاقة بالعلوم الأخرى</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <p class="intro-text">علم حديث متعدد التخصصات يهتم بجمع ومعالجة وتحليل وتمثيل وإدارة المعلومات المرتبطة بالمكان والحيز الجغرافي. يدرس البيانات ذات الموقع الجغرافي ويطور الأساليب والتقنيات لفهم الأنماط والعلاقات المكانية.</div>
+      <div class="subsection">
+        <div class="subsection-title">المجالات الخمسة</div>
+        <div class="cards-grid">
+          <div class="card-item"><div class="card-tag c-green">١</div><div class="card-name">📍 البيانات المكانية</div><div class="card-desc">نقاط، خطوط، مضلعات، بيانات شبكية.</div></div>
+          <div class="card-item"><div class="card-tag c-green">٢</div><div class="card-name">🛰️ تقنيات جمع البيانات</div><div class="card-desc">الاستشعار عن بُعد + GPS + المسح الجغرافي التقليدي والرقمي.</div></div>
+          <div class="card-item"><div class="card-tag c-green">٣</div><div class="card-name">🗄️ إدارة قواعد البيانات المكانية</div><div class="card-desc">تخزين في GIS + Big Data + الذكاء الاصطناعي.</div></div>
+          <div class="card-item"><div class="card-tag c-green">٤</div><div class="card-name">📊 التحليل المكاني</div><div class="card-desc">دراسة الأنماط والتجمعات + النمذجة المكانية + التحليل الشبكي.</div></div>
+          <div class="card-item"><div class="card-tag c-green">٥</div><div class="card-name">🗺️ التمثيل البصري</div><div class="card-desc">إنتاج الخرائط الرقمية والتفاعلية + النمذجة ثلاثية الأبعاد والواقع الافتراضي.</div></div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">علاقة SIS بالعلوم الأخرى</div>
+        <ul class="point-list green-list">
+          <li><strong>GIS:</strong> الأداة الرئيسية لتطبيق علم المعلومات المكانية</li>
+          <li><strong>التحليل المكاني:</strong> فرع تطبيقي يستخدم مبادئ SIS لفحص الأنماط والعلاقات</li>
+          <li><strong>الاستشعار عن بُعد:</strong> مصدر مهم للحصول على البيانات المكانية</li>
+          <li><strong>علوم البيانات والذكاء الاصطناعي:</strong> تُستخدم لمعالجة الكم الهائل من البيانات المكانية</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <h3>📌 ملخص المحاضرة الأولى — أبرز النقاط</h3>
+    <div class="summary-items">
+      <div class="summary-item"><div class="summary-item-dot" style="background:var(--purple);"></div><div class="summary-item-text"><strong>GIS vs GIScience:</strong> GIS أداة عملية. GIScience جانب علمي ونظري أوسع نطاقاً.</div></div>
+      <div class="summary-item"><div class="summary-item-dot" style="background:var(--teal);"></div><div class="summary-item-text"><strong>٥ مكونات:</strong> بيانات جغرافية + أجهزة + برمجيات + أفراد + إجراءات وسياسات.</div></div>
+      <div class="summary-item"><div class="summary-item-dot" style="background:var(--blue);"></div><div class="summary-item-text"><strong>٣ أنواع بيانات:</strong> Vector (نقاط/خطوط/مضلعات) + Raster (خلايا) + Geodatabases.</div></div>
+      <div class="summary-item"><div class="summary-item-dot" style="background:var(--amber);"></div><div class="summary-item-text"><strong>٤ وظائف:</strong> إدخال (أصعب وأغلى مرحلة 70%) ← تخزين ← معالجة وتحليل ← إخراج.</div></div>
+      <div class="summary-item"><div class="summary-item-dot" style="background:var(--coral);"></div><div class="summary-item-text"><strong>الاستعالم والبحث:</strong> أفضل وظيفة عرفت بها GIS — يجمع شروط مكانية ووصفية معاً.</div></div>
+      <div class="summary-item"><div class="summary-item-dot" style="background:var(--green);"></div><div class="summary-item-text"><strong>الاتجاهات الحديثة:</strong> AI + Cloud GIS + Big Data + WebGIS + 3D/4D + IoT.</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- TAB QUIZ -->
+<div class="tab-panel" id="tab-quiz">
+<div class="container">
+  <div class="quiz-intro">
+    <h2>✏️ بنك الأسئلة التفاعلي</h2>
+    <p>٢٠ سؤالاً متنوعاً على المحاضرة الأولى</p>
+  </div>
+  <div class="score-bar">
+    <div class="score-label">اختر إجابتك ثم اضغط "تحقق"</div>
+    <div class="score-display" id="scoreDisplay">0 / 0</div>
+    <button class="btn-reset" onclick="resetQuiz()">🔄 إعادة</button>
+  </div>
+
+  <div class="lec-divider"><div class="lec-divider-line"></div><div class="lec-divider-label">🌐 التعريفات والمكونات</div><div class="lec-divider-line"></div></div>
+
+  <div class="quiz-card" id="q1">
+    <div class="q-header"><div class="q-num">س ١</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">كم عدد المكونات الرئيسية لنظم المعلومات الجغرافية؟</div></div>
+    </div>
+    <div class="options" id="opts1">
+      <div class="option" onclick="selectOpt('q1','A',this)"><div class="opt-letter">أ</div> ثلاثة</div>
+      <div class="option" onclick="selectOpt('q1','B',this)"><div class="opt-letter">ب</div> أربعة</div>
+      <div class="option" onclick="selectOpt('q1','C',this)"><div class="opt-letter">ج</div> خمسة</div>
+      <div class="option" onclick="selectOpt('q1','D',this)"><div class="opt-letter">د</div> ستة</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q1','C')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q1">✅ الإجابة الصحيحة: <strong>ج — خمسة مكونات</strong> (بيانات + أجهزة + برمجيات + أفراد + إجراءات وسياسات)</div>
+  </div>
+
+  <div class="quiz-card" id="q2">
+    <div class="q-header"><div class="q-num">س ٢</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">QGIS هو مثال على أي نوع من برامج GIS؟</div></div>
+    </div>
+    <div class="options" id="opts2">
+      <div class="option" onclick="selectOpt('q2','A',this)"><div class="opt-letter">أ</div> برنامج تجاري</div>
+      <div class="option" onclick="selectOpt('q2','B',this)"><div class="opt-letter">ب</div> برنامج مفتوح المصدر</div>
+      <div class="option" onclick="selectOpt('q2','C',this)"><div class="opt-letter">ج</div> قاعدة بيانات مكانية</div>
+      <div class="option" onclick="selectOpt('q2','D',this)"><div class="opt-letter">د</div> برنامج استشعار عن بُعد</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q2','B')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q2">✅ الإجابة الصحيحة: <strong>ب — مفتوح المصدر</strong>. التجارية: ArcGIS وMapInfo. قواعد البيانات: Oracle Spatial وPostGIS.</div>
+  </div>
+
+  <div class="quiz-card" id="q3">
+    <div class="q-header"><div class="q-num">س ٣</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">ما الفرق الجوهري بين GIS و GIScience؟</div></div>
+    </div>
+    <div class="options" id="opts3">
+      <div class="option" onclick="selectOpt('q3','A',this)"><div class="opt-letter">أ</div> GIS أوسع نطاقاً وأكثر شمولاً من GIScience</div>
+      <div class="option" onclick="selectOpt('q3','B',this)"><div class="opt-letter">ب</div> GIS هو الأداة العملية بينما GIScience هو الجانب العلمي والنظري الأوسع</div>
+      <div class="option" onclick="selectOpt('q3','C',this)"><div class="opt-letter">ج</div> هما مصطلحان مترادفان لنفس الشيء</div>
+      <div class="option" onclick="selectOpt('q3','D',this)"><div class="opt-letter">د</div> GIScience يختص بالخرائط فقط</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q3','B')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q3">✅ الإجابة الصحيحة: <strong>ب</strong> — GIS هو الأداة والتطبيق العملي. GIScience هو الجانب العلمي والنظري الذي يبحث في طرق التمثيل والتحليل المكانية وهو أشمل وأوسع.</div>
+  </div>
+
+  <div class="quiz-card" id="q4">
+    <div class="q-header"><div class="q-num">س ٤</div><span class="q-type-badge badge-tf">صح / خطأ</span>
+      <div><div class="q-text">البيانات الوصفية (Attribute) هي بيانات مكانية تمثل النقاط والخطوط والمضلعات.</div></div>
+    </div>
+    <div class="options" id="opts4">
+      <div class="option" onclick="selectOpt('q4','A',this)"><div class="opt-letter">✓</div> صح</div>
+      <div class="option" onclick="selectOpt('q4','B',this)"><div class="opt-letter">✗</div> خطأ</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q4','B')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q4">✅ <strong>خطأ</strong> — البيانات المكانية (Spatial) هي التي تمثل النقاط والخطوط والمضلعات. أما البيانات الوصفية (Attribute) فهي الخصائص والسمات المرتبطة بها (اسم المدينة، عدد السكان).</div>
+  </div>
+
+  <div class="quiz-card" id="q5">
+    <div class="q-header"><div class="q-num">س ٥</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">أي نموذج بيانات مثالي لتمثيل الظواهر المستمرة كالارتفاعات ودرجة الحرارة؟</div></div>
+    </div>
+    <div class="options" id="opts5">
+      <div class="option" onclick="selectOpt('q5','A',this)"><div class="opt-letter">أ</div> Vector Model</div>
+      <div class="option" onclick="selectOpt('q5','B',this)"><div class="opt-letter">ب</div> Raster Model</div>
+      <div class="option" onclick="selectOpt('q5','C',this)"><div class="opt-letter">ج</div> Geodatabase</div>
+      <div class="option" onclick="selectOpt('q5','D',this)"><div class="opt-letter">د</div> TIN Model</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q5','B')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q5">✅ الإجابة الصحيحة: <strong>ب — Raster Model</strong> مثالي للظواهر المستمرة. بينما Vector مثالي للكيانات المنفصلة كالمباني والطرق.</div>
+  </div>
+
+  <div class="lec-divider"><div class="lec-divider-line"></div><div class="lec-divider-label">⚙️ الوظائف وإدخال البيانات</div><div class="lec-divider-line"></div></div>
+
+  <div class="quiz-card" id="q6">
+    <div class="q-header"><div class="q-num">س ٦</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">ما النسبة التقريبية لتكلفة إدخال المعلومات من التكلفة الإجمالية لمشروع GIS؟</div></div>
+    </div>
+    <div class="options" id="opts6">
+      <div class="option" onclick="selectOpt('q6','A',this)"><div class="opt-letter">أ</div> 30%</div>
+      <div class="option" onclick="selectOpt('q6','B',this)"><div class="opt-letter">ب</div> 50%</div>
+      <div class="option" onclick="selectOpt('q6','C',this)"><div class="opt-letter">ج</div> 70%</div>
+      <div class="option" onclick="selectOpt('q6','D',this)"><div class="opt-letter">د</div> 90%</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q6','C')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q6">✅ الإجابة الصحيحة: <strong>ج — 70%</strong> — إدخال المعلومات هو العائق الأكبر في إنشاء مشروع GIS وقد تصل تكلفته لـ 70% من التكلفة الإجمالية.</div>
+  </div>
+
+  <div class="quiz-card" id="q7">
+    <div class="q-header"><div class="q-num">س ٧</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">ما أفضل وظيفة عرفت بها أنظمة المعلومات الجغرافية؟</div></div>
+    </div>
+    <div class="options" id="opts7">
+      <div class="option" onclick="selectOpt('q7','A',this)"><div class="opt-letter">أ</div> إدخال المعلومات</div>
+      <div class="option" onclick="selectOpt('q7','B',this)"><div class="opt-letter">ب</div> تخزين المعلومات</div>
+      <div class="option" onclick="selectOpt('q7','C',this)"><div class="opt-letter">ج</div> الاستعلام والبحث</div>
+      <div class="option" onclick="selectOpt('q7','D',this)"><div class="opt-letter">د</div> إخراج الخرائط</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q7','C')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q7">✅ الإجابة الصحيحة: <strong>ج — الاستعلام والبحث</strong> — هو أفضل وظيفة عرفت بها GIS ويتيح البحث بشروط وصفية ومكانية مدمجة.</div>
+  </div>
+
+  <div class="quiz-card" id="q8">
+    <div class="q-header"><div class="q-num">س ٨</div><span class="q-type-badge badge-tf">صح / خطأ</span>
+      <div><div class="q-text">من السهل تفريق المعلومات المركّبة في طبقة واحدة في نظم المعلومات الجغرافية.</div></div>
+    </div>
+    <div class="options" id="opts8">
+      <div class="option" onclick="selectOpt('q8','A',this)"><div class="opt-letter">✓</div> صح</div>
+      <div class="option" onclick="selectOpt('q8','B',this)"><div class="opt-letter">✗</div> خطأ</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q8','B')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q8">✅ <strong>خطأ</strong> — من السهل دمج المعلومات أثناء الاستعلام، لكن ليس من السهل تفريق المعلومات المركّبة في طبقة واحدة.</div>
+  </div>
+
+  <div class="quiz-card" id="q9">
+    <div class="q-header"><div class="q-num">س ٩</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">مرحلة إدخال المعلومات تشمل عدة خطوات، أيها ليست من ضمنها؟</div></div>
+    </div>
+    <div class="options" id="opts9">
+      <div class="option" onclick="selectOpt('q9','A',this)"><div class="opt-letter">أ</div> جمع المعلومات</div>
+      <div class="option" onclick="selectOpt('q9','B',this)"><div class="opt-letter">ب</div> التأكد من صحة المعلومات</div>
+      <div class="option" onclick="selectOpt('q9','C',this)"><div class="opt-letter">ج</div> تحليل الملاءمة المكانية</div>
+      <div class="option" onclick="selectOpt('q9','D',this)"><div class="opt-letter">د</div> استيراد وتصدير المعلومات</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q9','C')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q9">✅ الإجابة الصحيحة: <strong>ج</strong> — تحليل الملاءمة المكانية جزء من مرحلة المعالجة والتحليل وليس من مرحلة الإدخال.</div>
+  </div>
+
+  <div class="quiz-card" id="q10">
+    <div class="q-header"><div class="q-num">س ١٠</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">أنواع تخزين المعلومات في GIS هي:</div></div>
+    </div>
+    <div class="options" id="opts10">
+      <div class="option" onclick="selectOpt('q10','A',this)"><div class="opt-letter">أ</div> أساسي ومؤقت ونسخ احتياطية</div>
+      <div class="option" onclick="selectOpt('q10','B',this)"><div class="opt-letter">ب</div> Raster وVector وGeodatabase</div>
+      <div class="option" onclick="selectOpt('q10','C',this)"><div class="opt-letter">ج</div> مكاني ووصفي ورقمي</div>
+      <div class="option" onclick="selectOpt('q10','D',this)"><div class="opt-letter">د</div> دائم ومؤقت وافتراضي</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q10','A')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q10">✅ الإجابة الصحيحة: <strong>أ — أساسي + مؤقت + نسخ احتياطية</strong></div>
+  </div>
+
+  <div class="lec-divider"><div class="lec-divider-line"></div><div class="lec-divider-label">🌍 التطبيقات والتحديات والاتجاهات</div><div class="lec-divider-line"></div></div>
+
+  <div class="quiz-card" id="q11">
+    <div class="q-header"><div class="q-num">س ١١</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">أي من التالي مثال على المعالم الاصطناعية في تصنيف بيانات GIS؟</div></div>
+    </div>
+    <div class="options" id="opts11">
+      <div class="option" onclick="selectOpt('q11','A',this)"><div class="opt-letter">أ</div> الغابات والتضاريس</div>
+      <div class="option" onclick="selectOpt('q11','B',this)"><div class="opt-letter">ب</div> الأنهار والبحار</div>
+      <div class="option" onclick="selectOpt('q11','C',this)"><div class="opt-letter">ج</div> السكك الحديدية والحدود الدولية</div>
+      <div class="option" onclick="selectOpt('q11','D',this)"><div class="opt-letter">د</div> الخطوط المرجانية</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q11','C')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q11">✅ الإجابة الصحيحة: <strong>ج</strong> — السكك الحديدية والحدود الدولية والمباني معالم اصطناعية ذات حدود واضحة. الغابات والأنهار والتضاريس معالم طبيعية.</div>
+  </div>
+
+  <div class="quiz-card" id="q12">
+    <div class="q-header"><div class="q-num">س ١٢</div><span class="q-type-badge badge-tf">صح / خطأ</span>
+      <div><div class="q-text">الخرائط التفاعلية على الإنترنت (WebGIS) تُعد من الاتجاهات الحديثة في GIS.</div></div>
+    </div>
+    <div class="options" id="opts12">
+      <div class="option" onclick="selectOpt('q12','A',this)"><div class="opt-letter">✓</div> صح</div>
+      <div class="option" onclick="selectOpt('q12','B',this)"><div class="opt-letter">✗</div> خطأ</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q12','A')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q12">✅ <strong>صح</strong> — WebGIS من أبرز الاتجاهات الحديثة في GIS إلى جانب AI والحوسبة السحابية وBig Data.</div>
+  </div>
+
+  <div class="quiz-card" id="q13">
+    <div class="q-header"><div class="q-num">س ١٣</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">ما المقصود بـ 4D GIS؟</div></div>
+    </div>
+    <div class="options" id="opts13">
+      <div class="option" onclick="selectOpt('q13','A',this)"><div class="opt-letter">أ</div> نظام يعمل على أربعة أجهزة في نفس الوقت</div>
+      <div class="option" onclick="selectOpt('q13','B',this)"><div class="opt-letter">ب</div> إدخال البعد الزمني مع التحليل المكاني ثلاثي الأبعاد</div>
+      <div class="option" onclick="selectOpt('q13','C',this)"><div class="opt-letter">ج</div> نظام يدعم أربعة أنواع من البيانات</div>
+      <div class="option" onclick="selectOpt('q13','D',this)"><div class="opt-letter">د</div> نسخة محسّنة من ArcGIS</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q13','B')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q13">✅ الإجابة الصحيحة: <strong>ب</strong> — 4D GIS يعني إدخال البُعد الزمني (الوقت) مع التحليل المكاني ثلاثي الأبعاد.</div>
+  </div>
+
+  <div class="quiz-card" id="q14">
+    <div class="q-header"><div class="q-num">س ١٤</div><span class="q-type-badge badge-tf">صح / خطأ</span>
+      <div><div class="q-text">علم المعلومات المكانية (SIS) أشمل وأوسع نطاقاً من نظم المعلومات الجغرافية (GIS).</div></div>
+    </div>
+    <div class="options" id="opts14">
+      <div class="option" onclick="selectOpt('q14','A',this)"><div class="opt-letter">✓</div> صح</div>
+      <div class="option" onclick="selectOpt('q14','B',this)"><div class="opt-letter">✗</div> خطأ</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q14','A')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q14">✅ <strong>صح</strong> — SIS أشمل وأوسع يشمل كل ما يتعلق بالمعلومات ذات البُعد المكاني بغض النظر عن الأداة. GIS جزء منه يركز على النظم والتطبيقات الحاسوبية.</div>
+  </div>
+
+  <div class="quiz-card" id="q15">
+    <div class="q-header"><div class="q-num">س ١٥</div><span class="q-type-badge badge-mcq">اختيار متعدد</span>
+      <div><div class="q-text">ما أبرز تحدٍّ يتعلق بالخصوصية في نظم المعلومات الجغرافية؟</div></div>
+    </div>
+    <div class="options" id="opts15">
+      <div class="option" onclick="selectOpt('q15','A',this)"><div class="opt-letter">أ</div> ارتفاع تكلفة الأجهزة</div>
+      <div class="option" onclick="selectOpt('q15','B',this)"><div class="opt-letter">ب</div> البيانات المرتبطة بالأفراد وأمن البيانات</div>
+      <div class="option" onclick="selectOpt('q15','C',this)"><div class="opt-letter">ج</div> صعوبة استخدام البرامج</div>
+      <div class="option" onclick="selectOpt('q15','D',this)"><div class="opt-letter">د</div> بطء معالجة البيانات</div>
+    </div>
+    <button class="btn-check" onclick="checkMCQ('q15','B')">تحقق من الإجابة</button>
+    <div class="answer-reveal correct-ans" id="ans-q15">✅ الإجابة الصحيحة: <strong>ب</strong> — الخصوصية وأمن البيانات تحديٌ مهم خاصة البيانات المرتبطة بالأفراد.</div>
+  </div>
+
+  <div class="quiz-card" id="q16">
+    <div class="q-header"><div class="q-num">س ١٦</div><span class="q-type-badge badge-short">إجابة قصيرة</span>
+      <div><div class="q-text">ما الفرق بين المعالم الطبيعية والاصطناعية في تصنيف بيانات GIS؟</div></div>
+    </div>
+    <button class="btn-show" onclick="showAnswer('q16')">إظهار الإجابة النموذجية</button>
+    <div class="answer-reveal info-ans" id="ans-q16">💡 <strong>المعالم الطبيعية:</strong> يصعب تحديد حدودها بدقة عالية — مثل الغابات، حدود الجبال، الأنهار والبحار، أشكال النباتات.<br><strong>المعالم الاصطناعية:</strong> ذات حدود واضحة ومحددة — مثل الطرق والسكك الحديدية، الأبنية والمنشآت، الحدود الدولية والإقليمية.</div>
+  </div>
+
+  <div class="quiz-card" id="q17">
+    <div class="q-header"><div class="q-num">س ١٧</div><span class="q-type-badge badge-short">إجابة قصيرة</span>
+      <div><div class="q-text">لماذا يُعد التحقق من صحة المعلومات قبل إدخالها للنظام أمراً حيوياً؟</div></div>
+    </div>
+    <button class="btn-show" onclick="showAnswer('q17')">إظهار الإجابة النموذجية</button>
+    <div class="answer-reveal info-ans" id="ans-q17">💡 لأن المعلومات غير الصحيحة تعطي نتائج غير صحيحة (مدخلات خطأ = مخرجات خطأ). يمكن التأكد بالتحقق الميداني لعينات عشوائية أو مقارنتها بمصادر أخرى. المعلومات الأرشيفية تحتاج تدقيقاً وتحديثاً قبل استخدامها.</div>
+  </div>
+
+  <div class="quiz-card" id="q18">
+    <div class="q-header"><div class="q-num">س ١٨</div><span class="q-type-badge badge-short">إجابة قصيرة</span>
+      <div><div class="q-text">اذكر ٣ مجالات تطبيقية لنظم المعلومات الجغرافية مع مثال لكل مجال.</div></div>
+    </div>
+    <button class="btn-show" onclick="showAnswer('q18')">إظهار الإجابة النموذجية</button>
+    <div class="answer-reveal info-ans" id="ans-q18">💡 أي ثلاثة من:<br>١. <strong>التخطيط العمراني:</strong> اختيار مواقع المدارس والمستشفيات.<br>٢. <strong>البيئة:</strong> مراقبة التصحر وتآكل التربة.<br>٣. <strong>الصحة العامة:</strong> رسم خرائط انتشار وباء معين.<br>٤. <strong>النقل:</strong> تحديد أفضل مسارات الطرق.<br>٥. <strong>إدارة الكوارث:</strong> خرائط الفيضانات والزلازل.</div>
+  </div>
+
+  <div class="quiz-card" id="q19">
+    <div class="q-header"><div class="q-num">س ١٩</div><span class="q-type-badge badge-essay">مقالي</span>
+      <div><div class="q-text">اشرح الوظائف الأربع لنظم المعلومات الجغرافية مع ذكر أهم ما يميز كل وظيفة.</div></div>
+    </div>
+    <button class="btn-show" onclick="showAnswer('q19')">إظهار الإجابة النموذجية</button>
+    <div class="answer-reveal info-ans" id="ans-q19">💡 <strong>١ — الإدخال:</strong> أول وأصعب المراحل وأكثرها عرضة للخطأ، تكلفتها قد تبلغ 70% من الإجمالية. تشمل: جمع البيانات + التحقق من صحتها + تحريرها + استيرادها.<br><br><strong>٢ — التخزين:</strong> يتم في طبقات وهو أهم مميزات GIS — سهل الدمج صعب التفريق — التخزين الخطي أكثر إتاحةً للتحليل من الشبكي.<br><br><strong>٣ — المعالجة والتحليل:</strong> تشمل الوظائف الكارتوجرافية + الاستعلام والبحث (أفضل وظيفة GIS) + قياس المعالم + التحليل الإحصائي.<br><br><strong>٤ — الإخراج:</strong> خرائط ورقية ورقمية + WebGIS + 3D GIS + جداول وتقارير وصفحات إنترنت.</div>
+  </div>
+
+  <div class="quiz-card" id="q20">
+    <div class="q-header"><div class="q-num">س ٢٠</div><span class="q-type-badge badge-essay">مقالي</span>
+      <div><div class="q-text">ما المجالات الخمسة لعلم المعلومات المكانية (SIS) وكيف يرتبط بنظم المعلومات الجغرافية؟</div></div>
+    </div>
+    <button class="btn-show" onclick="showAnswer('q20')">إظهار الإجابة النموذجية</button>
+    <div class="answer-reveal info-ans" id="ans-q20">💡 <strong>المجالات الخمسة:</strong><br>١. البيانات المكانية (نقاط، خطوط، مضلعات، شبكية)<br>٢. تقنيات جمع البيانات (استشعار عن بُعد + GPS + مسح جغرافي)<br>٣. إدارة قواعد البيانات المكانية (GIS + Big Data + AI)<br>٤. التحليل المكاني (أنماط + نمذجة + تحليل شبكي)<br>٥. التمثيل البصري (خرائط رقمية + 3D + واقع افتراضي)<br><br><strong>علاقته بـ GIS:</strong> GIS هو الأداة الرئيسية لتطبيق SIS. التحليل المكاني فرع تطبيقي يستخدم مبادئ SIS. SIS أشمل وأوسع بينما GIS جزء منه يركز على النظم الحاسوبية.</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+  function switchTab(panel, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + panel).classList.add('active');
+    btn.classList.add('active');
+  }
+  function toggle(id) { document.getElementById(id).classList.toggle('open'); }
+
+  const state = {};
+  let correct = 0, total = 0;
+
+  function selectOpt(qid, val, el) {
+    if (state[qid] && state[qid].checked) return;
+    document.querySelectorAll('#' + qid + ' .option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    if (!state[qid]) state[qid] = {};
+    state[qid].selected = val;
+  }
+  function checkMCQ(qid, correctVal) {
+    if (!state[qid] || !state[qid].selected) { alert('اختر إجابة أولاً!'); return; }
+    if (state[qid].checked) return;
+    state[qid].checked = true; total++;
+    const opts = document.querySelectorAll('#' + qid + ' .option');
+    const letters = ['A','B','C','D'];
+    opts.forEach((o, i) => {
+      if (letters[i] === correctVal) o.classList.add('correct');
+      else if (letters[i] === state[qid].selected) o.classList.add('wrong');
+    });
+    if (state[qid].selected === correctVal) correct++;
+    document.getElementById('ans-' + qid).classList.add('show');
+    document.getElementById('scoreDisplay').textContent = correct + ' / ' + total;
+  }
+  function showAnswer(qid) { document.getElementById('ans-' + qid).classList.add('show'); }
+  function resetQuiz() {
+    Object.keys(state).forEach(k => delete state[k]);
+    correct = 0; total = 0;
+    document.getElementById('scoreDisplay').textContent = '0 / 0';
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected','correct','wrong'));
+    document.querySelectorAll('.answer-reveal').forEach(a => a.classList.remove('show'));
+  }
+</script>
+</body>
+</html>
