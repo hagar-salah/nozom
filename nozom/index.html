@@ -22,7 +22,6 @@
       --purple-accent: #8b5cf6;
       --purple-light: #f0eaff;
       --teal-accent: #2c7a7b;
-      --teal-light: #e6fffa;
     }
 
     body {
@@ -87,19 +86,19 @@
       font-size: 1.05rem;
     }
 
-    /* موضوع المادتين (Checkbox + زر) */
+    /* بطاقات المواد */
     .subjects-container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 40px auto 20px;
       padding: 0 20px;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 32px;
     }
 
     .subject-card {
       background: white;
-      border-radius: 28px;
+      border-radius: 32px;
       box-shadow: var(--shadow);
       border: 1px solid rgba(0,0,0,0.05);
       transition: all 0.25s ease;
@@ -107,7 +106,7 @@
     }
     .subject-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.12);
     }
 
     .subject-header {
@@ -117,6 +116,7 @@
       padding: 24px 30px;
       background: #fefaf5;
       border-bottom: 1px solid #f0e2d4;
+      flex-wrap: wrap;
     }
     .subject-icon {
       font-size: 3rem;
@@ -136,136 +136,87 @@
       font-size: 0.9rem;
     }
 
-    /* Checkbox مخصص */
-    .checkbox-wrapper {
+    /* Dropdown box (القائمة المنسدلة) */
+    .dropdown-wrapper {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 15px;
       background: #f9f1e8;
-      padding: 10px 20px;
+      padding: 8px 20px;
       border-radius: 60px;
-      margin-left: 20px;
+      margin-left: 10px;
     }
-    .checkbox-wrapper label {
+    .dropdown-wrapper label {
       font-weight: 600;
       color: #5a3e26;
-      cursor: pointer;
+      font-size: 0.9rem;
     }
-    .custom-check {
-      width: 22px;
-      height: 22px;
-      accent-color: var(--gold);
+    .subject-dropdown {
+      padding: 8px 16px;
+      border-radius: 40px;
+      border: 1px solid #e2cfbc;
+      background: white;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #3a2a1a;
       cursor: pointer;
-      margin: 0;
+      min-width: 200px;
+      transition: 0.2s;
+    }
+    .subject-dropdown:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(200,137,42,0.2);
     }
 
-    /* قسم الأزرار + المحاضرات المخفية */
-    .lectures-section {
-      padding: 20px 30px 30px;
-      background: #fffcf8;
-      border-top: 1px solid #f0e2d4;
-    }
-    .btn-lectures {
+    /* زر الانتقال */
+    .btn-go {
       background: var(--gold);
       color: white;
       border: none;
-      padding: 12px 28px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      transition: 0.2s;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .btn-lectures:hover {
-      background: #a56e1f;
-      transform: scale(0.98);
-    }
-
-    .lectures-list {
-      display: none;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      margin-top: 10px;
-      animation: fadeSlideUp 0.4s ease;
-    }
-    .lectures-list.active {
-      display: grid;
-    }
-
-    .lecture-item {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 18px 22px;
-      border: 1px solid #f0dfcf;
-      transition: all 0.2s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .lecture-item:hover {
-      border-color: var(--gold);
-      background: #fffef7;
-    }
-    .lecture-info {
-      flex: 1;
-    }
-    .lecture-title {
-      font-weight: 800;
-      font-size: 1.05rem;
-      color: #2d2b26;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .lecture-desc {
-      font-size: 0.75rem;
-      color: #9b7b5c;
-      margin-top: 4px;
-    }
-    .lecture-link {
-      background: #f3ede5;
-      color: #7a3f0a;
-      text-decoration: none;
-      padding: 8px 22px;
+      padding: 8px 24px;
       border-radius: 40px;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.85rem;
+      cursor: pointer;
       transition: 0.2s;
-      border: 1px solid #e5d5c4;
+      font-family: 'Tajawal', sans-serif;
     }
-    .lecture-link:hover {
-      background: var(--gold);
-      color: white;
-      border-color: var(--gold);
+    .btn-go:hover {
+      background: #a56e1f;
+      transform: scale(0.97);
     }
 
-    /* ألوان خاصة للمادة الجديدة (خرائط اليه) */
+    /* تنسيق خاص للمادة الجديدة (خرائط اليه) */
     .subject-card.new-map-subject .subject-header {
       background: linear-gradient(120deg, #faf5ff, #f3eaff);
     }
-    .subject-card.new-map-subject .btn-lectures {
-      background: var(--purple-accent);
-      box-shadow: 0 2px 10px rgba(139,92,246,0.3);
+    .subject-card.new-map-subject .dropdown-wrapper {
+      background: #ede6ff;
     }
-    .subject-card.new-map-subject .btn-lectures:hover {
+    .subject-card.new-map-subject .btn-go {
+      background: var(--purple-accent);
+      box-shadow: 0 2px 8px rgba(139,92,246,0.25);
+    }
+    .subject-card.new-map-subject .btn-go:hover {
       background: #6d3bc6;
     }
-    .subject-card.new-map-subject .checkbox-wrapper .custom-check {
-      accent-color: var(--purple-accent);
-    }
-    .subject-card.new-map-subject .lecture-item {
-      border-left: 3px solid var(--purple-accent);
+    .subject-card.new-map-subject .subject-dropdown {
+      border-color: #cdbbea;
     }
 
-    /* تنسيق footer و animations */
+    /* ملاحظات إضافية */
+    .lecture-note {
+      font-size: 0.75rem;
+      color: #9b7b5c;
+      margin-top: 16px;
+      padding: 8px 20px 20px;
+      border-top: 1px solid #f0e2d4;
+      background: #fffcf8;
+      text-align: left;
+    }
+
     footer {
       text-align: center;
       padding: 30px;
@@ -275,42 +226,30 @@
       font-size: 0.85rem;
     }
 
-    @keyframes fadeSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     @media (max-width: 700px) {
       .navbar {
         flex-direction: column;
         gap: 10px;
       }
       .subject-header {
-        flex-wrap: wrap;
-      }
-      .checkbox-wrapper {
-        margin-left: 0;
-        margin-top: 8px;
-      }
-      .lecture-item {
         flex-direction: column;
         align-items: flex-start;
       }
-      .lecture-link {
-        align-self: flex-start;
+      .dropdown-wrapper {
+        width: 100%;
+        justify-content: space-between;
+        margin-left: 0;
+        margin-top: 10px;
+      }
+      .subject-dropdown {
+        flex: 1;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- شريط التنقل الرئيسي (يمكن ربطه بأي صفحة لاحقاً) -->
+  <!-- شريط التنقل -->
   <div class="navbar">
     <div class="logo">GIS <span>Hub</span></div>
     <div class="nav-links">
@@ -323,13 +262,13 @@
 
   <div class="hero">
     <h1>📚 منصة المحاضرات الجامعية</h1>
-    <p>اختر المادة الدراسية، فعّل العرض، ثم استعرض المحاضرات التفاعلية لكل مقرر. تحتوي المنصة على محتوى غني لـ "نظم المعلومات الجغرافية" و "خرائط اليه الجديدة" مع روابط مباشرة للمواد العلمية.</p>
+    <p>اختر المادة الدراسية، ثم اختر المحاضرة من القائمة المنسدلة واضغط "انتقال" لبدء الدراسة. تم تخصيص المحتوى لكل مادة بشكل منفصل.</p>
   </div>
 
   <div class="subjects-container">
     
     <!-- ============================================= -->
-    <!-- 1. مادة نظم المعلومات الجغرافية (الموجودة سابقاً) -->
+    <!-- 1. مادة نظم المعلومات الجغرافية (GIS) -->
     <!-- ============================================= -->
     <div class="subject-card" id="subjectGIS">
       <div class="subject-header">
@@ -338,58 +277,21 @@
           <h2>نظم المعلومات الجغرافية</h2>
           <p>GIS – تحليل مكاني، خرائط رقمية، استشعار عن بعد، وإدارة البيانات الجغرافية</p>
         </div>
-        <div class="checkbox-wrapper">
-          <input type="checkbox" class="custom-check" id="checkGIS">
-          <label for="checkGIS">☑️ إظهار المحاضرات</label>
+        <div class="dropdown-wrapper">
+          <label>📚 اختر المحاضرة:</label>
+          <select id="gisDropdown" class="subject-dropdown">
+            <option value="index2.html">🖥️ المتطلبات الفنية (Hardware/Software)</option>
+            <option value="index3.html">🧑‍🏫 المتطلبات العلمية والبشرية</option>
+            <option value="index4.html">🌍 تطبيقات نظم المعلومات الجغرافية المتقدمة</option>
+            <option value="index5.html" disabled style="color:#aaa;">🎨 مبادئ تصميم الخرائط (خاص بخرائط اليه)</option>
+            <option value="index6.html" disabled style="color:#aaa;">📌 طرق المعالجة والإنتاج الرقمي (خاص بخرائط اليه)</option>
+            <option value="index7.html" disabled style="color:#aaa;">🛰️ تقنيات البيانات المكانية (خاص بخرائط اليه)</option>
+          </select>
+          <button class="btn-go" id="goGisBtn">⬅️ انتقال</button>
         </div>
       </div>
-      <div class="lectures-section">
-        <button class="btn-lectures" data-subject="gis">📖 استعراض محاضرات GIS</button>
-        <div class="lectures-list" id="lecturesGIS">
-          <!-- محاضرات نظم المعلومات الجغرافية (الثلاث محاضرات الأصلية + مواد إضافية متوافقة) -->
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🖥️ المتطلبات الفنية لنظم المعلومات الجغرافية</div>
-              <div class="lecture-desc">أجهزة الإدخال، المعالجة، التخزين، شروط البرمجيات التطبيقية</div>
-            </div>
-            <a href="index2.html" class="lecture-link">📖 دخول المحاضرة</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🧑‍🏫 المتطلبات العلمية والبشرية</div>
-              <div class="lecture-desc">مصادر البيانات (خرائط، استشعار عن بعد)، GPS، الكوادر البشرية ومستويات التأهيل</div>
-            </div>
-            <a href="index3.html" class="lecture-link">📖 دخول المحاضرة</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🌍 تطبيقات نظم المعلومات الجغرافية المتقدمة</div>
-              <div class="lecture-desc">المكونات الخمسة، أنواع البيانات (Vector/Raster)، 7 مجالات تطبيقية + بنك أسئلة</div>
-            </div>
-            <a href="index4.html" class="lecture-link">📖 دخول المحاضرة</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🎨 مبادئ تصميم الخرائط (الفصل الأول)</div>
-              <div class="lecture-desc">مراحل التصميم الستة، مبادئ الإدراك، عناصر الرموز والألوان والخطوط، الاتصال الخرائطي</div>
-            </div>
-            <a href="index5.html" class="lecture-link">📖 دخول المحاضرة</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">📌 الفصل الثاني: طرق المعالجة والإنتاج الرقمي للخرائط</div>
-              <div class="lecture-desc">مفهوم الخرائط الرقمية، نظم المعلومات الجغرافية GIS، أجهزة الإدخال، برامج الرسم، أنظمة الألوان</div>
-            </div>
-            <a href="index6.html" class="lecture-link">📖 دخول المحاضرة</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🛰️ التقنيات المستخدمة في الحصول على البيانات المكانية</div>
-              <div class="lecture-desc">المساحة الأرضية، GPS، الصور الجوية، المرئيات الفضائية، LiDAR، الطائرات بدون طيار</div>
-            </div>
-            <a href="index7.html" class="lecture-link">📖 دخول المحاضرة</a>
-          </div>
-        </div>
+      <div class="lecture-note">
+        💡 ملاحظة: المحاضرات المتاحة لمادة GIS هي (المتطلبات الفنية، المتطلبات البشرية، التطبيقات المتقدمة). المحاضرات الأخرى (index5,6,7) مخصصة لـ "خرائط اليه الجديدة".
       </div>
     </div>
 
@@ -403,189 +305,99 @@
           <h2>خرائط اليه الجديدة</h2>
           <p>خرائط آلية رقمية متطورة – تقنيات متقدمة في رسم الخرائط ونظم المعلومات الخرائطية الحديثة</p>
         </div>
-        <div class="checkbox-wrapper">
-          <input type="checkbox" class="custom-check" id="checkNewMap">
-          <label for="checkNewMap">☑️ إظهار المحاضرات</label>
+        <div class="dropdown-wrapper">
+          <label>📘 اختر المحاضرة:</label>
+          <select id="newmapDropdown" class="subject-dropdown">
+            <option value="index5.html">🎨 مبادئ تصميم الخرائط (الفصل الأول)</option>
+            <option value="index6.html">📌 الفصل الثاني: طرق المعالجة والإنتاج الرقمي للخرائط</option>
+            <option value="index7.html">🛰️ التقنيات المستخدمة في الحصول على البيانات المكانية</option>
+            <option value="#" disabled style="color:#aaa;">➕ محاضرات إضافية قريباً</option>
+          </select>
+          <button class="btn-go" id="goNewmapBtn">⬅️ انتقال</button>
         </div>
       </div>
-      <div class="lectures-section">
-        <button class="btn-lectures" data-subject="newmap">🌟 استعراض محاضرات خرائط اليه</button>
-        <div class="lectures-list" id="lecturesNewMap">
-          <!-- محاضرات المادة الجديدة (محتوى أكاديمي فريد ومتكامل) -->
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">📐 مدخل إلى الخرائط الرقمية الآلية</div>
-              <div class="lecture-desc">تعريف الخرائط الإلكترونية، الفرق بين الخريطة التقليدية والرقمية، مميزات الإنتاج الرقمي.</div>
-            </div>
-            <a href="#" class="lecture-link" onclick="alert('جاري تجهيز المحتوى الخاص بخرائط اليه – المحاضرة الأولى قريباً'); return false;">📖 قريباً</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🧩 مكونات نظام الخريطة الرقمية الحديثة</div>
-              <div class="lecture-desc">قواعد البيانات الخرائطية، محركات الرسم المتجهي، دمج الطبقات المكانية، التحديث اللحظي.</div>
-            </div>
-            <a href="#" class="lecture-link" onclick="alert('سيتم رفع هذه المحاضرة قريباً مع أمثلة تفاعلية'); return false;">📖 قريباً</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🗺️ تقنيات الإسقاط والإحداثيات في الخرائط الالية</div>
-              <div class="lecture-desc">أنظمة الإحداثيات العالمية (UTM)، تحويلات الإسقاط، تأثيرات التشوه، اختيار المسقط المناسب.</div>
-            </div>
-            <a href="#" class="lecture-link" onclick="alert('المحتوى قيد التطوير – سيتم إضافة تمارين عملية'); return false;">📖 قريباً</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">⚙️ المعالجة الرقمية للبيانات الخرائطية</div>
-              <div class="lecture-desc">التنظيف الطوبولوجي، تحسين البيانات المكانية، الترميز الخرائطي، معالجة الأخطاء.</div>
-            </div>
-            <a href="#" class="lecture-link" onclick="alert('يتم إعداد عروض تفاعلية حول المعالجة الرقمية'); return false;">📖 قريباً</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🖨️ إخراج الخرائط الرقمية وتنسيقات الإنتاج</div>
-              <div class="lecture-desc">تنسيقات الملفات (GeoJSON، Shapefile، KML)، التصميم للطباعة والويب، ضغط البيانات.</div>
-            </div>
-            <a href="#" class="lecture-link" onclick="alert('محاضرة شاملة حول تنسيقات الإخراج – سيتم رفعها خلال أيام'); return false;">📖 قريباً</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">📊 تحليل الشبكات والخرائط الذكية</div>
-              <div class="lecture-desc">تحليل المسارات، أقصر طريق، خرائط التنقل، تطبيقات الخرائط الآلية في المدن الذكية.</div>
-            </div>
-            <a href="#" class="lecture-link" onclick="alert('سوف يتم إضافة فيديو توضيحي وأمثلة عملية قريباً'); return false;">📖 قريباً</a>
-          </div>
-          <div class="lecture-item">
-            <div class="lecture-info">
-              <div class="lecture-title">🧠 الخريطة الذهنية المتكاملة – الفصل الأول</div>
-              <div class="lecture-desc">ملخص بصري شامل لمفاهيم الخرائط الرقمية، تقنيات الإنتاج، وعلاقتها بالاستشعار عن بعد.</div>
-            </div>
-            <a href="#" class="lecture-link" onclick="alert('الخريطة التفاعلية قيد الإعداد – ستكون متاحة خلال أسبوع'); return false;">📖 قريباً</a>
-          </div>
-        </div>
+      <div class="lecture-note">
+        🌟 محتوى حصري: يتضمن هذا المساق محاضرات (مبادئ تصميم الخرائط – الفصل الثاني للإنتاج الرقمي – تقنيات الحصول على البيانات المكانية) وجميعها متاحة بالكامل.
       </div>
     </div>
-
   </div>
 
   <footer>
-    <p>📚 منصة المحاضرات التفاعلية – مادة نظم المعلومات الجغرافية & مادة خرائط اليه الجديدة | يتم تحديث المحتوى باستمرار لإثراء المعرفة الخرائطية</p>
-    <p style="margin-top: 12px;">✅ يمكنك تفعيل checkbox لكل مادة ثم الضغط على زر "استعراض المحاضرات" لعرض المحتوى الخاص بها</p>
+    <p>📚 منصة المحاضرات التفاعلية – مادة نظم المعلومات الجغرافية & مادة خرائط اليه الجديدة | استخدم القوائم المنسدلة للوصول المباشر للمحتوى العلمي</p>
+    <p style="margin-top: 12px;">✅ index5 - index6 - index7 تتبع الآن مقرر "خرائط اليه الجديدة" بينما تظل محاضرات GIS كما هي في index2, index3, index4</p>
   </footer>
 
   <script>
-    // --------------------------------
-    // منطق إظهار/إخفاء قوائم المحاضرات بناءً على الـ checkbox + زر خاص
-    // --------------------------------
+    // ------------------------------------------------
+    // منطق Dropdown + زر الانتقال بدون أي رسائل alert
+    // ------------------------------------------------
     
-    // عناصر المواد
-    const checkGIS = document.getElementById('checkGIS');
-    const checkNewMap = document.getElementById('checkNewMap');
-    const lecturesGIS = document.getElementById('lecturesGIS');
-    const lecturesNewMap = document.getElementById('lecturesNewMap');
+    // عناصر GIS
+    const gisDropdown = document.getElementById('gisDropdown');
+    const goGisBtn = document.getElementById('goGisBtn');
     
-    // الأزرار الخاصة بكل مادة
-    const btnGIS = document.querySelector('[data-subject="gis"]');
-    const btnNewMap = document.querySelector('[data-subject="newmap"]');
+    // عناصر المادة الجديدة (خرائط اليه)
+    const newmapDropdown = document.getElementById('newmapDropdown');
+    const goNewmapBtn = document.getElementById('goNewmapBtn');
     
-    // وظيفة تحديث حالة القوائم بناءً على الـ checkbox والزر (عند الضغط على الزر)
-    function setLecturesVisibility(subject, show) {
-      if (subject === 'gis') {
-        if (show) {
-          lecturesGIS.classList.add('active');
-        } else {
-          lecturesGIS.classList.remove('active');
-        }
-      } else if (subject === 'newmap') {
-        if (show) {
-          lecturesNewMap.classList.add('active');
-        } else {
-          lecturesNewMap.classList.remove('active');
-        }
+    // دالة انتقال آمنة (تفتح الرابط في نفس التبويب أو نافذة جديدة حسب الرغبة، نفضل نفس التبويب)
+    function navigateTo(url) {
+      if (url && url !== '#' && url !== '') {
+        window.location.href = url;
       }
     }
     
-    // حدث عند تغيير checkbox GIS
-    if (checkGIS) {
-      checkGIS.addEventListener('change', function(e) {
-        // إذا تم إلغاء التفعيل، نخفي القائمة إذا كانت ظاهرة
-        if (!checkGIS.checked) {
-          setLecturesVisibility('gis', false);
+    // زر مادة GIS
+    if (goGisBtn && gisDropdown) {
+      goGisBtn.addEventListener('click', function() {
+        const selectedVal = gisDropdown.value;
+        if (selectedVal && selectedVal !== '#') {
+          navigateTo(selectedVal);
         } else {
-          // إذا تم تفعيل الـ checkbox ولم تكن القائمة ظاهرة، يمكن أن نظهرها تلقائياً أو ننتظر زر العرض.
-          // حسب الطلب: المستخدم يريد checkbox + زر، لذا سنترك الزر هو المسؤول عن الإظهار عند الحاجة.
-          // ولكن لتحسين التجربة، يمكن أن نمنع الإظهار التلقائي ونكتفي بالزر.
-          // لا نقوم بإظهارها تلقائياً، سينتظر الضغط على الزر.
-        }
-      });
-    }
-    
-    // حدث checkbox المادة الجديدة
-    if (checkNewMap) {
-      checkNewMap.addEventListener('change', function(e) {
-        if (!checkNewMap.checked) {
-          setLecturesVisibility('newmap', false);
-        }
-      });
-    }
-    
-    // زر مادة نظم المعلومات الجغرافية: يتحقق من تفعيل الـ checkbox أولاً، ثم يظهر المحاضرات
-    if (btnGIS) {
-      btnGIS.addEventListener('click', function() {
-        if (checkGIS.checked) {
-          // إظهار قائمة المحاضرات الخاصة بـ GIS
-          setLecturesVisibility('gis', true);
-          // (اختياري) يمكن أيضاً تمرير سلس
-          lecturesGIS.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-          alert('❌ يرجى تفعيل خيار "إظهار المحاضرات" الخاص بمادة نظم المعلومات الجغرافية أولاً (ال checkbox)');
+          // بدون alert - فقط لا يحدث شيء (أو يمكن توجيه إلى الصفحة الرئيسية)
+          // حسب متطلبات المستخدم "لا alert" نفضل الصمت التام.
+          return;
         }
       });
     }
     
     // زر مادة خرائط اليه الجديدة
-    if (btnNewMap) {
-      btnNewMap.addEventListener('click', function() {
-        if (checkNewMap.checked) {
-          setLecturesVisibility('newmap', true);
-          lecturesNewMap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-          alert('❌ يرجى تفعيل خيار "إظهار المحاضرات" الخاص بمادة خرائط اليه الجديدة أولاً');
+    if (goNewmapBtn && newmapDropdown) {
+      goNewmapBtn.addEventListener('click', function() {
+        const selectedVal = newmapDropdown.value;
+        if (selectedVal && selectedVal !== '#') {
+          navigateTo(selectedVal);
         }
       });
     }
     
-    // دعم إضافي: إذا تم إلغاء الـ checkbox أثناء ظهور القائمة نخفيها تلقائياً
-    if (checkGIS) {
-      checkGIS.addEventListener('change', function() {
-        if (!checkGIS.checked) setLecturesVisibility('gis', false);
-      });
-    }
-    if (checkNewMap) {
-      checkNewMap.addEventListener('change', function() {
-        if (!checkNewMap.checked) setLecturesVisibility('newmap', false);
-      });
-    }
-    
-    // افتراضياً (عند تحميل الصفحة) لا تظهر أي قائمة، ونضمن أن القوائم مخفية
-    lecturesGIS.classList.remove('active');
-    lecturesNewMap.classList.remove('active');
-    
-    // إضافة تأثير بسيط: لمنع أي تداخل مع الروابط التجريبية للمادة الجديدة
-    const demoLinks = document.querySelectorAll('#lecturesNewMap .lecture-link');
-    demoLinks.forEach(link => {
-      // نمنع السلوك الافتراضي الذي قد يؤدي إلى صفحة غير موجودة ونعطي إشعار بدلاً من ذلك
-      // ولكننا نحتفظ بـ onclick الموجود بالفعل في السمة
-      if (!link.getAttribute('onclick')) {
-        link.addEventListener('click', (e) => {
+    // اختياري: دعم الضغط على Enter في القائمة (ليس ضرورياً لكنه تحسن بسيط)
+    if (gisDropdown) {
+      gisDropdown.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
           e.preventDefault();
-          alert('هذه المحاضرة قيد التطوير ضمن منهج خرائط اليه الجديدة، سيتم إطلاقها قريباً.');
-        });
-      }
-    });
+          const val = gisDropdown.value;
+          if (val && val !== '#') navigateTo(val);
+        }
+      });
+    }
+    if (newmapDropdown) {
+      newmapDropdown.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = newmapDropdown.value;
+          if (val && val !== '#') navigateTo(val);
+        }
+      });
+    }
     
-    // تنبيه صغير للمحاضرات الموجودة في GIS (جميعها تعمل بشكل طبيعي لأن الروابط حقيقية)
-    // التأكد من أن الروابط في GIS تفتح الملفات الموجودة (index2, index3, index4, index5, index6, index7)
-    // جميع هذه الملفات موجودة مسبقاً كما أرسلها المستخدم، لذلك لا حاجة للتعديل عليها.
+    // تأكيد إضافي: لا توجد أي رسائل تنبيه (alert) في الكود نهائياً.
+    // جميع الروابط تعمل بشكل طبيعي: index2,3,4 لمادة GIS و index5,6,7 لمادة خرائط اليه الجديدة.
+    // تم تعطيل الخيارات الغير مرغوب فيها في قائمة GIS (index5,6,7 معطلة وتبدو رمادية).
+    // بينما في مادة خرائط اليه، الخيارات (index5, index6, index7) فقط هي النشطة، مع خيارات إضافية معطلة.
+    
+    // للتأكد من عدم وجود أي alert قديم - تم حذف كل الـ alert() من الصفحة بالكامل
+    console.log("الصفحة جاهزة، لا توجد رسائل تنبيه، والـ dropdown يعمل بسلاسة.");
   </script>
 </body>
 </html>
