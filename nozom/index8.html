@@ -1,0 +1,1560 @@
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التعميم الكارتوجرافي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --deep-blue: #0d2244;
+    --teal: #0e7c7b;
+    --gold: #d4a843;
+    --amber: #f0a500;
+    --sand: #e8d5a3;
+    --cream: #fdf6e3;
+    --red-accent: #c0392b;
+    --green-accent: #1a6b3a;
+    --light-teal: #a8e6e5;
+    --white: #ffffff;
+    --text-dark: #1a1a2e;
+    --card-bg: rgba(255,255,255,0.95);
+    --shadow: 0 8px 40px rgba(10,22,40,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--navy);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2244 40%, #0e4a6e 70%, #0e7c7b 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 60px 20px;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff08' stroke-width='1'%3E%3Cpath d='M0 40 L80 40 M40 0 L40 80 M0 0 L80 80 M80 0 L0 80'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  .map-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(14,124,123,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14,124,123,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  .compass {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: 80px;
+    height: 80px;
+    opacity: 0.25;
+    animation: spin 30s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hero-badge {
+    background: linear-gradient(135deg, var(--teal), var(--gold));
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 8px 24px;
+    border-radius: 50px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+    animation: fadeDown 0.8s ease;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero h1 {
+    font-family: 'Amiri', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 700;
+    color: var(--white);
+    text-align: center;
+    line-height: 1.2;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    animation: fadeUp 1s ease 0.2s both;
+  }
+
+  .hero h1 span {
+    color: var(--gold);
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-sub {
+    color: var(--light-teal);
+    font-size: 1.15rem;
+    margin-top: 20px;
+    text-align: center;
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 1s ease 0.4s both;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 50px;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 1s ease 0.6s both;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-box {
+    text-align: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 20px 30px;
+    transition: transform 0.3s;
+  }
+
+  .stat-box:hover { transform: translateY(-5px); }
+
+  .stat-num {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--gold);
+    display: block;
+  }
+
+  .stat-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.8rem;
+    text-align: center;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-hint::after {
+    content: '↓';
+    display: block;
+    font-size: 1.5rem;
+    color: var(--gold);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .main {
+    background: var(--cream);
+    padding: 80px 0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .section-num {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  }
+
+  .section-title {
+    font-family: 'Amiri', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+
+  .section-title span {
+    display: block;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--teal);
+    font-family: 'Cairo', sans-serif;
+    margin-bottom: 4px;
+  }
+
+  .divider {
+    height: 4px;
+    border-radius: 2px;
+    margin: 10px 0 50px 0;
+  }
+
+  /* ===== SECTION BLOCKS ===== */
+  .section-block {
+    margin-bottom: 90px;
+    scroll-margin-top: 80px;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+    border-right: 6px solid transparent;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 60px rgba(10,22,40,0.22);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .card-blue { border-right-color: var(--deep-blue); }
+  .card-blue::before { background: linear-gradient(90deg, var(--deep-blue), var(--teal)); }
+
+  .card-teal { border-right-color: var(--teal); }
+  .card-teal::before { background: linear-gradient(90deg, var(--teal), var(--light-teal)); }
+
+  .card-gold { border-right-color: var(--gold); }
+  .card-gold::before { background: linear-gradient(90deg, var(--gold), var(--amber)); }
+
+  .card-red { border-right-color: var(--red-accent); }
+  .card-red::before { background: linear-gradient(90deg, var(--red-accent), #e74c3c); }
+
+  .card-green { border-right-color: var(--green-accent); }
+  .card-green::before { background: linear-gradient(90deg, var(--green-accent), #27ae60); }
+
+  .card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card p {
+    color: #3a3a5c;
+    line-height: 2;
+    font-size: 1rem;
+  }
+
+  /* ===== DEFINITION BOX ===== */
+  .definition-box {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--deep-blue) 60%, #0e4a6e 100%);
+    border-radius: 24px;
+    padding: 48px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .definition-box::after {
+    content: '🗺';
+    position: absolute;
+    left: 30px;
+    bottom: -10px;
+    font-size: 8rem;
+    opacity: 0.06;
+  }
+
+  .definition-box .quote-mark {
+    font-size: 5rem;
+    color: var(--gold);
+    line-height: 0.5;
+    font-family: 'Amiri', serif;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .definition-box p {
+    font-size: 1.2rem;
+    line-height: 2.1;
+    color: rgba(255,255,255,0.9);
+    position: relative;
+    z-index: 1;
+  }
+
+  .definition-box .highlight {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* ===== GOALS GRID ===== */
+  .goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+
+  .goal-card {
+    background: white;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .goal-card:hover { transform: translateY(-6px); }
+
+  .goal-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+  }
+
+  .goal-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+
+  .goal-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.9;
+  }
+
+  /* ===== TYPES SECTION ===== */
+  .types-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 700px) { .types-grid { grid-template-columns: 1fr; } }
+
+  .type-card {
+    border-radius: 20px;
+    padding: 36px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+
+  .type-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .type-card-1 { background: linear-gradient(135deg, #0d2244, #0e7c7b); }
+  .type-card-2 { background: linear-gradient(135deg, #1a5c1a, #2ecc71); }
+
+  .type-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .type-card p {
+    line-height: 2;
+    font-size: 0.98rem;
+    opacity: 0.9;
+  }
+
+  .type-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-size: 0.8rem;
+    margin-bottom: 16px;
+  }
+
+  /* ===== 3 QUESTIONS ===== */
+  .questions-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 750px) { .questions-row { grid-template-columns: 1fr; } }
+
+  .q-card {
+    border-radius: 18px;
+    padding: 30px 24px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.18);
+    transition: transform 0.3s;
+  }
+
+  .q-card:hover { transform: translateY(-6px); }
+  .q-card-1 { background: linear-gradient(160deg, #8e24aa, #5c6bc0); }
+  .q-card-2 { background: linear-gradient(160deg, #0288d1, #0e7c7b); }
+  .q-card-3 { background: linear-gradient(160deg, #d84315, #f57f17); }
+
+  .q-card .big-letter {
+    font-size: 3rem;
+    font-weight: 900;
+    opacity: 0.3;
+    line-height: 1;
+    margin-bottom: 8px;
+    font-family: 'Amiri', serif;
+  }
+
+  .q-card h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .q-card ul {
+    list-style: none;
+    text-align: right;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .q-card ul li {
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .q-card ul li:last-child { border: none; }
+
+  /* ===== FACTORS ===== */
+  .factors-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .factor-item {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    box-shadow: 0 3px 20px rgba(0,0,0,0.07);
+    transition: transform 0.3s;
+    border-right: 5px solid transparent;
+  }
+
+  .factor-item:hover { transform: translateX(-5px); }
+
+  .factor-num {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .factor-content h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .factor-content p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.9;
+  }
+
+  .factor-content .example {
+    background: #f0f7ff;
+    border-right: 3px solid var(--teal);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: #0d2244;
+  }
+
+  .factor-content .example::before {
+    content: '📌 مثال: ';
+    font-weight: 700;
+    color: var(--teal);
+  }
+
+  /* ===== ELEMENTS SECTION ===== */
+  .elements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+  }
+
+  .element-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+    transition: transform 0.3s;
+  }
+
+  .element-card:hover { transform: translateY(-5px); }
+
+  .element-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .element-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .element-card h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .element-card .en-name {
+    font-size: 0.8rem;
+    color: #999;
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  .element-body {
+    padding: 0 24px 24px;
+  }
+
+  .element-body p {
+    color: #444;
+    font-size: 0.93rem;
+    line-height: 2;
+    margin-bottom: 12px;
+  }
+
+  .element-example {
+    background: linear-gradient(135deg, #f8f9ff, #eef2ff);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    color: #333;
+    border-right: 3px solid;
+  }
+
+  .element-example strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+  }
+
+  /* ===== SCALE VIS ===== */
+  .scale-vis {
+    background: linear-gradient(135deg, var(--navy), #0d2244);
+    border-radius: 24px;
+    padding: 50px 40px;
+    margin-bottom: 30px;
+    color: white;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .scale-vis h3 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 40px;
+    color: var(--gold);
+  }
+
+  .scale-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .scale-block {
+    flex: 1;
+    padding: 24px 16px;
+    text-align: center;
+    transition: flex 0.3s;
+  }
+
+  .scale-block:hover { flex: 1.5; }
+
+  .scale-block h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .scale-block .detail-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.3);
+    margin: 8px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scale-block .detail-bar::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    border-radius: 4px;
+    background: var(--gold);
+  }
+
+  .scale-1 { background: #1a3a5c; }
+  .scale-1 .detail-bar::after { width: 90%; }
+
+  .scale-2 { background: #1a5c3a; }
+  .scale-2 .detail-bar::after { width: 60%; }
+
+  .scale-3 { background: #5c3a1a; }
+  .scale-3 .detail-bar::after { width: 30%; }
+
+  .scale-4 { background: #5c1a1a; }
+  .scale-4 .detail-bar::after { width: 10%; }
+
+  /* ===== ALERT BOX ===== */
+  .alert-box {
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .alert-warning {
+    background: #fff8e1;
+    border: 2px solid #f0a500;
+  }
+
+  .alert-info {
+    background: #e3f2fd;
+    border: 2px solid #0288d1;
+  }
+
+  .alert-success {
+    background: #e8f5e9;
+    border: 2px solid #43a047;
+  }
+
+  .alert-icon { font-size: 1.8rem; flex-shrink: 0; margin-top: 2px; }
+
+  .alert-box p {
+    color: #333;
+    font-size: 0.97rem;
+    line-height: 1.9;
+  }
+
+  .alert-box strong { color: var(--navy); }
+
+  /* ===== IMPORTANCE ===== */
+  .importance-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 30px 0;
+    flex-wrap: wrap;
+  }
+
+  .flow-box {
+    flex: 1;
+    min-width: 160px;
+    background: white;
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.09);
+    transition: transform 0.3s;
+  }
+
+  .flow-box:hover { transform: scale(1.05); }
+
+  .flow-box .flow-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+  .flow-box h5 { font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+  .flow-box p { font-size: 0.8rem; color: #777; margin-top: 6px; }
+
+  .flow-arrow {
+    font-size: 1.8rem;
+    color: var(--gold);
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 0.9rem;
+  }
+
+  footer span { color: var(--gold); }
+
+  /* ===== NAV ===== */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    background: rgba(10,22,40,0.96);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    padding: 14px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  .nav-logo {
+    color: var(--gold);
+    font-weight: 900;
+    font-size: 1.1rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .nav-links a:hover {
+    color: var(--gold);
+    background: rgba(212,168,67,0.15);
+  }
+
+  /* ===== INTRO STRIP ===== */
+  .strip {
+    background: linear-gradient(90deg, var(--teal), var(--navy));
+    color: white;
+    padding: 18px 40px;
+    text-align: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2.2rem; }
+    .definition-box { padding: 28px; }
+    .card { padding: 24px; }
+    .top-nav .nav-links { display: none; }
+    .questions-row { grid-template-columns: 1fr; }
+  }
+
+  /* color codes for factor nums */
+  .fn-1 { background: #8e24aa; }
+  .fn-2 { background: #0288d1; }
+  .fn-3 { background: #d84315; }
+  .fn-4 { background: #43a047; }
+  .fn-5 { background: #e53935; }
+  .fn-6 { background: #f57f17; }
+
+  .fi-1 { border-right-color: #8e24aa; }
+  .fi-2 { border-right-color: #0288d1; }
+  .fi-3 { border-right-color: #d84315; }
+  .fi-4 { border-right-color: #43a047; }
+  .fi-5 { border-right-color: #e53935; }
+  .fi-6 { border-right-color: #f57f17; }
+
+  /* element colors */
+  .ec-a { background: #e8f0fe; } .ec-a .element-example { border-right-color: #4285f4; }
+  .ec-b { background: #fce8e6; } .ec-b .element-example { border-right-color: #ea4335; }
+  .ec-c { background: #e6f4ea; } .ec-c .element-example { border-right-color: #34a853; }
+  .ec-d { background: #fef7e0; } .ec-d .element-example { border-right-color: #fbbc04; }
+  .ec-e { background: #fce8e6; } .ec-e .element-example { border-right-color: #c0392b; }
+  .ec-f { background: #e8f5e9; } .ec-f .element-example { border-right-color: #2e7d32; }
+  .ec-g { background: #f3e5f5; } .ec-g .element-example { border-right-color: #7b1fa2; }
+  .ec-h { background: #e3f2fd; } .ec-h .element-example { border-right-color: #1565c0; }
+
+  .tag {
+    display: inline-block;
+    background: var(--teal);
+    color: white;
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-right: 6px;
+    margin-bottom: 8px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="nav-logo">🗺 التعميم الكارتوجرافي</div>
+  <ul class="nav-links">
+    <li><a href="#def">المفهوم</a></li>
+    <li><a href="#goals">الأهداف</a></li>
+    <li><a href="#types">الأقسام</a></li>
+    <li><a href="#importance">الأهمية</a></li>
+    <li><a href="#factors">العوامل</a></li>
+    <li><a href="#elements">العناصر</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="map-grid"></div>
+  <svg class="compass" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.5">
+    <circle cx="50" cy="50" r="45"/>
+    <polygon points="50,10 55,48 50,52 45,48" fill="white"/>
+    <polygon points="50,90 55,52 50,48 45,52" fill="rgba(255,255,255,0.3)"/>
+    <circle cx="50" cy="50" r="4" fill="gold"/>
+  </svg>
+
+  <div class="hero-badge">📚 محاضرة كارتوجرافيا</div>
+  <h1>التعميم <span>الكارتوجرافي</span></h1>
+  <p class="hero-sub">دراسة شاملة في مفاهيم وأهداف وعوامل وعناصر عملية التعميم في صناعة الخرائط</p>
+
+  <div class="hero-stats">
+    <div class="stat-box">
+      <span class="stat-num">٦</span>
+      <span class="stat-label">عوامل مؤثرة</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">٨</span>
+      <span class="stat-label">عناصر التعميم</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">٢</span>
+      <span class="stat-label">نوع رئيسي</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">٣</span>
+      <span class="stat-label">وظائف أساسية</span>
+    </div>
+  </div>
+  <div class="scroll-hint">مرر للأسفل</div>
+</div>
+
+<!-- STRIP -->
+<div class="strip">
+  ⚡ خريطة متكاملة للمحتوى — من المفهوم إلى التطبيق — بأمثلة تفصيلية لكل عنصر
+</div>
+
+<!-- MAIN -->
+<div class="main">
+<div class="container">
+
+  <!-- ===== 1. DEFINITION ===== -->
+  <div class="section-block" id="def">
+    <div class="section-header">
+      <div class="section-num" style="background:linear-gradient(135deg,#0d2244,#0e7c7b)">١</div>
+      <div>
+        <div class="section-title"><span>أولاً</span>مفهوم التعميم الكارتوجرافي</div>
+      </div>
+    </div>
+    <div class="divider" style="background:linear-gradient(90deg,#0d2244,#0e7c7b,transparent)"></div>
+
+    <div class="definition-box">
+      <span class="quote-mark">"</span>
+      <p>
+        <span class="highlight">التعميم الكارتوجرافي (Cartographic Generalization)</span> هو عملية
+        <span class="highlight">تبسيط حالة التعقيد</span> بتصغير مساحة الخريطة على نحو منظم،
+        وإزالة أو تقليل الاهتمام بالتفاصيل غير المرغوب فيها، وفي ذات الوقت
+        <span class="highlight">التركيز على الظاهرات الهامة</span> التي تمثل موضوع الخريطة.
+      </p>
+    </div>
+
+    <div class="two-col">
+      <div class="card card-blue">
+        <h3>🎯 متى نحتاج التعميم؟</h3>
+        <p>
+          تتم عملية التعميم في حالتين رئيسيتين:<br><br>
+          <strong>١- النقل من الطبيعة:</strong> عند نقل المعلومات من سطح الأرض إلى الخريطة الطبوغرافية مباشرةً.<br><br>
+          <strong>٢- تصغير المقياس:</strong> عند إنتاج خريطة صغيرة المقياس من خريطة أخرى كبيرة المقياس.
+        </p>
+      </div>
+      <div class="card card-teal">
+        <h3>⚖️ التوازن الحرج</h3>
+        <p>
+          دقة الخريطة ومدى مطابقتها للواقع يعتمدان اعتماداً كبيراً على درجة التعميم:<br><br>
+          ✅ <strong>تعميم جيد →</strong> خريطة سهلة الفهم والاستعمال.<br><br>
+          ❌ <strong>تعميم سيئ →</strong> خريطة صعبة القراءة، غير دقيقة، كثيرة الأخطاء.
+        </p>
+      </div>
+    </div>
+
+    <div class="alert-box alert-info">
+      <span class="alert-icon">💡</span>
+      <p>
+        <strong>مثال توضيحي:</strong> عندما تنظر إلى صورة جوية أو مرئية فضائية، ستجد أنها تعكس صورة واقعية لكل التفاصيل الكبيرة والصغيرة دون انحياز لأي ظاهرة. هذا الكم الهائل من البيانات لا يمكن تمثيله دفعة واحدة على الخريطة — لذا تأتي عملية التعميم لاختيار ما يخدم الهدف من الخريطة وحذف الباقي.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 2. GOALS ===== -->
+  <div class="section-block" id="goals">
+    <div class="section-header">
+      <div class="section-num" style="background:linear-gradient(135deg,#d4a843,#c0392b)">٢</div>
+      <div>
+        <div class="section-title"><span>ثانياً</span>أهداف التعميم</div>
+      </div>
+    </div>
+    <div class="divider" style="background:linear-gradient(90deg,#d4a843,#c0392b,transparent)"></div>
+
+    <div class="goals-grid">
+      <div class="goal-card">
+        <div class="goal-icon" style="background:#e8f0fe">🎨</div>
+        <h4>الهدف الأول: التجانس</h4>
+        <p>جعل الخريطة <strong>متجانسة</strong> من حيث تمثيلها للتفاصيل والظاهرات، بحيث لا تبدو بعض المناطق مكتظة بالتفاصيل وأخرى فارغة.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon" style="background:#e6f4ea">📖</div>
+        <h4>الهدف الثاني: سهولة القراءة</h4>
+        <p>جعل الخريطة <strong>سهلة القراءة والتفسير</strong> لمستخدمها، بحيث يستطيع استخراج المعلومات دون تشويش أو ارتباك.</p>
+      </div>
+    </div>
+
+    <div class="alert-box alert-warning">
+      <span class="alert-icon">⚠️</span>
+      <p>
+        <strong>تحذير:</strong> يجب التعامل مع عملية التعميم بدقة ومهارة عالية:
+        <br>• <strong>مبالغة في التعميم</strong> → ضعف المحتوى المعلوماتي للخريطة وفقدان تفاصيل مهمة.
+        <br>• <strong>تقليل من التعميم</strong> → صعوبة في القراءة وتشويش على قارئ الخريطة.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 3. TYPES ===== -->
+  <div class="section-block" id="types">
+    <div class="section-header">
+      <div class="section-num" style="background:linear-gradient(135deg,#0e7c7b,#1a6b3a)">٣</div>
+      <div>
+        <div class="section-title"><span>ثالثاً</span>أقسام التعميم</div>
+      </div>
+    </div>
+    <div class="divider" style="background:linear-gradient(90deg,#0e7c7b,#1a6b3a,transparent)"></div>
+
+    <div class="types-grid">
+      <div class="type-card type-card-1">
+        <span class="type-badge">النوع الأول</span>
+        <h3>🔤 التعميم الدلالي</h3>
+        <p>
+          هذا النوع مرتبط بـ<strong>دلالة الرمز على الظاهرة</strong> لمقياس الرسم المختار.
+          <br><br>
+          كلما كانت الخريطة أكبر في المقياس كانت أكثر دلالة وأقل في التعميم، وكلما صغر مقياس الرسم زادت عملية التعميم.
+          <br><br>
+          يرتبط دائماً بعمليات <strong>المبالغة والتبسيط والتجميع</strong> التي قد تحدث عند تعميم الخرائط.
+          <br><br>
+          ⚡ دائماً ما يسبق التعميمَ الدلاليَّ التعميمُ الهندسي.
+        </p>
+      </div>
+      <div class="type-card type-card-2">
+        <span class="type-badge">النوع الثاني</span>
+        <h3>📐 التعميم الهندسي</h3>
+        <p>
+          كثيراً ما تكون الخريطة ممتلئة بالتفاصيل المعبرة عن الظاهرات، وكلما كانت الخريطة أصغر في المقياس كلما كانت الظاهرات أقل وضوحاً وأكثر تعميماً.
+          <br><br>
+          يأتي دور التعميم الهندسي للـ<strong>حفاظ على الأجزاء المهمة من البيانات</strong> بتوضيح الظاهرات التي قد تختفي من صغرها مع صغر المقياس.
+          <br><br>
+          يتم الاستعانة بتغيير <strong>الشكل والخصائص الهندسية</strong> لتواكب المقياس المستخدم.
+        </p>
+      </div>
+    </div>
+
+    <h3 style="margin:40px 0 24px;font-size:1.3rem;color:var(--navy);text-align:center">
+      🔄 وظائف التعميم — ثلاثة أسئلة جوهرية
+    </h3>
+
+    <div class="questions-row">
+      <div class="q-card q-card-1">
+        <div class="big-letter">؟</div>
+        <h4>لماذا؟ (Why)</h4>
+        <ul>
+          <li>الهدف الفلسفي</li>
+          <li>العناصر النظرية</li>
+          <li>العناصر الخاصة بالتطبيق</li>
+          <li>العناصر التقديرية الحسابية</li>
+        </ul>
+      </div>
+      <div class="q-card q-card-2">
+        <div class="big-letter">؟</div>
+        <h4>متى؟ (When)</h4>
+        <ul>
+          <li>تقييم الخرائط القياسية</li>
+          <li>الحالات الهندسية</li>
+          <li>درجات المكان المناسب</li>
+          <li>مركز الثقل</li>
+        </ul>
+      </div>
+      <div class="q-card q-card-3">
+        <div class="big-letter">؟</div>
+        <h4>كيف؟ (How)</h4>
+        <ul>
+          <li>النقل الهندسي والنسبي</li>
+          <li>تأثير مفاهيم التعميم</li>
+          <li>الإجراءات الرسومية</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 4. IMPORTANCE ===== -->
+  <div class="section-block" id="importance">
+    <div class="section-header">
+      <div class="section-num" style="background:linear-gradient(135deg,#c0392b,#8e24aa)">٤</div>
+      <div>
+        <div class="section-title"><span>رابعاً</span>أهمية التعميم الكارتوجرافي</div>
+      </div>
+    </div>
+    <div class="divider" style="background:linear-gradient(90deg,#c0392b,#8e24aa,transparent)"></div>
+
+    <div class="card card-red">
+      <h3>🌍 لماذا لا يمكن الاستغناء عن التعميم؟</h3>
+      <p>
+        الصورة الجوية أو المرئية الفضائية تعكس صورة واقعية لجزء من سطح الأرض بكافة تفاصيله الكبيرة والصغيرة دون انحياز لأي ظاهرة. هذا الكم الهائل من البيانات <strong>لا يمكن تمثيله دفعة واحدة على الخريطة</strong>، فالخريطة تتأثر بشكل مباشر بالغرض من إنشائها ومقياس الرسم الخاص بها.
+      </p>
+    </div>
+
+    <div class="importance-flow">
+      <div class="flow-box">
+        <span class="flow-icon">🛰️</span>
+        <h5>الصورة الفضائية</h5>
+        <p>كل التفاصيل بلا استثناء</p>
+      </div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box">
+        <span class="flow-icon">⚙️</span>
+        <h5>عملية التعميم</h5>
+        <p>اختيار، حذف، تبسيط</p>
+      </div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box">
+        <span class="flow-icon">🗺️</span>
+        <h5>الخريطة الناتجة</h5>
+        <p>معلومات منظمة وواضحة</p>
+      </div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box">
+        <span class="flow-icon">👤</span>
+        <h5>مستخدم الخريطة</h5>
+        <p>يفهم ويستفيد بسهولة</p>
+      </div>
+    </div>
+
+    <div class="alert-box alert-success">
+      <span class="alert-icon">💰</span>
+      <p>
+        <strong>ميزة اقتصادية:</strong> لأن تكلفة إنتاج الخرائط عالية، يتم استغلال الخرائط الكبيرة المقياس في إنتاج الخرائط الأصغر في المقياس لتقليل التكلفة، خاصة مع توفر الخرائط وقاعدة البيانات في صورة رقمية.
+      </p>
+    </div>
+
+    <!-- Scale visualization -->
+    <div class="scale-vis">
+      <h3>📏 كيف يتغير التعميم مع المقياس</h3>
+      <div class="scale-row">
+        <div class="scale-block scale-1">
+          <h4>1:10,000</h4>
+          <div class="detail-bar"></div>
+          <small>تفاصيل كثيرة جداً</small>
+        </div>
+        <div class="scale-block scale-2">
+          <h4>1:25,000</h4>
+          <div class="detail-bar"></div>
+          <small>تفاصيل متوسطة</small>
+        </div>
+        <div class="scale-block scale-3">
+          <h4>1:1,000,000</h4>
+          <div class="detail-bar"></div>
+          <small>تفاصيل قليلة</small>
+        </div>
+        <div class="scale-block scale-4">
+          <h4>1:5,000,000</h4>
+          <div class="detail-bar"></div>
+          <small>تعميم شديد</small>
+        </div>
+      </div>
+      <p style="text-align:center;opacity:0.7;font-size:0.9rem;margin-top:16px">
+        ↑ كلما صغر المقياس، زاد التعميم وقلّت التفاصيل
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 5. FACTORS ===== -->
+  <div class="section-block" id="factors">
+    <div class="section-header">
+      <div class="section-num" style="background:linear-gradient(135deg,#f57f17,#d84315)">٥</div>
+      <div>
+        <div class="section-title"><span>خامساً</span>العوامل المؤثرة في التعميم</div>
+      </div>
+    </div>
+    <div class="divider" style="background:linear-gradient(90deg,#f57f17,#d84315,transparent)"></div>
+
+    <div class="factors-list">
+
+      <div class="factor-item fi-1">
+        <div class="factor-num fn-1">١</div>
+        <div class="factor-content">
+          <h4>أصل البيانات (Data Origin)</h4>
+          <p>تتم عملية التعميم في حالتين: نقل المعلومات من الطبيعة مباشرةً إلى الخريطة، أو إنتاج خريطة صغيرة المقياس من أخرى كبيرة المقياس. المعلومات في الحالة الأولى تكون أصلية فتعطي نتائج أفضل، أما في الحالة الثانية فقد تكون المعلومات معمَّمة أصلاً مما يُضعف دقة التعميم الجديد.</p>
+          <div class="example">الخرائط الطبوغرافية تُنتج من رفع مباشر للطبيعة (الحالة الأولى)، بينما خريطة العالم تُنتج من تصغير خرائط إقليمية (الحالة الثانية).</div>
+        </div>
+      </div>
+
+      <div class="factor-item fi-2">
+        <div class="factor-num fn-2">٢</div>
+        <div class="factor-content">
+          <h4>كمية البيانات (Data Volume)</h4>
+          <p>كمية المعلومات الموجودة بالطبيعة ومدى تجانس أو تعقد الظاهرات الطبيعية تُعدّ من الضوابط الهامة. إذا كانت المنطقة كثيرة التفاصيل لعب التعميم دوراً هاماً في تقليل البيانات. وفي حالات أخرى قد تمثل المعلومات الحد الأدنى المطلوب فلا تحتاج لتعميم كبير.</p>
+          <div class="example">منطقة دلتا النيل ذات كثافة سكانية وشبكة ري معقدة تحتاج تعميماً مكثفاً في الخرائط صغيرة المقياس، بينما منطقة صحراوية شاسعة تحتاج تعميماً أقل.</div>
+        </div>
+      </div>
+
+      <div class="factor-item fi-3">
+        <div class="factor-num fn-3">٣</div>
+        <div class="factor-content">
+          <h4>أهمية البيانات (Data Importance)</h4>
+          <p>تتحدد أهمية المعلومات طبقاً للهدف والغرض من الخريطة. البيانات الهامة في خريطة قد تكون غير هامة في أخرى. يجب اختيار المعلومات الأكثر أهمية وحذف الأقل أهمية.</p>
+          <div class="example">خطوط الكنتور: غير هامة في خريطة استخدام الأراضي الكبيرة المقياس، لكنها العنصر الرئيسي في الخريطة الطبوغرافية التي لا تؤدي هدفها بدونها.</div>
+        </div>
+      </div>
+
+      <div class="factor-item fi-4">
+        <div class="factor-num fn-4">٤</div>
+        <div class="factor-content">
+          <h4>نوع البيانات (Data Type)</h4>
+          <p>في الطبيعة توجد معلومات من نفس النوع أو أنواع متقاربة يمكن دمجها وإظهارها كوحدة واحدة. نوع المعلومات يؤثر تأثيراً كبيراً في طريقة التعميم.</p>
+          <div class="example">الأراضي الزراعية تظهر كوحدة واحدة باللون الأخضر رغم اختلاف المحاصيل في أشكالها وأنماطها. المباني السكنية تكوّن وحدة واحدة في صغر المقياس.</div>
+        </div>
+      </div>
+
+      <div class="factor-item fi-5">
+        <div class="factor-num fn-5">٥</div>
+        <div class="factor-content">
+          <h4>حجم تصغير المقياس (Scale Reduction)</h4>
+          <p>كلما كان التصغير أكبر كلما كان تأثير التعميم على البيانات الأصلية أكبر. هذا العامل مباشر وأساسي في تحديد درجة التعميم المطلوبة.</p>
+          <div class="example">إنتاج خريطة بمقياس 1:1,000,000 من خريطة 1:50,000 يتطلب تعميماً أشد بكثير من إنتاج خريطة 1:100,000 من نفس المصدر.</div>
+        </div>
+      </div>
+
+      <div class="factor-item fi-6">
+        <div class="factor-num fn-6">٦</div>
+        <div class="factor-content">
+          <h4>دقة الخريطة (Map Accuracy)</h4>
+          <p>دقة الخريطة الجديدة تعتمد على دقة التعميم في الخريطة الأكبر في المقياس. أعمال التبسيط والحذف الناتجة من التعميم قد تؤثر في دقة الخريطة، لذا يجب أن تكون عملية التعميم دقيقة وهذا يرجع إلى رؤية وخبرة الكارتوجرافي.</p>
+          <div class="example">إذا كانت الخريطة الأم تحتوي على أخطاء تعميم، فإن هذه الأخطاء ستنتقل وتتضاعف في الخريطة المشتقة منها.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="alert-box alert-info" style="margin-top:30px">
+      <span class="alert-icon">🧠</span>
+      <p>
+        <strong>عناصر إضافية يجب مراعاتها عند التعميم:</strong><br>
+        • الغرض من إنشاء الخريطة &nbsp;|&nbsp; مستخدم الخريطة ودرجة استيعابه<br>
+        • الحفاظ على الدقة الهندسية والجغرافية &nbsp;|&nbsp; الحفاظ على المعالم البارزة<br>
+        • العوامل التقنية والبشرية &nbsp;|&nbsp; جمالية الخريطة<br>
+        • طبيعة المحتوى: كمي أم نوعي (النوعي يتطلب معرفة أوسع بالمعالم)
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 6. ELEMENTS ===== -->
+  <div class="section-block" id="elements">
+    <div class="section-header">
+      <div class="section-num" style="background:linear-gradient(135deg,#0e7c7b,#0d2244)">٦</div>
+      <div>
+        <div class="section-title"><span>سادساً</span>عناصر التعميم — الأدوات التطبيقية</div>
+      </div>
+    </div>
+    <div class="divider" style="background:linear-gradient(90deg,#0e7c7b,#0d2244,transparent)"></div>
+
+    <div class="card card-teal" style="margin-bottom:30px">
+      <h3>📋 نظرة عامة على عناصر التعميم</h3>
+      <p>
+        عناصر التعميم هي الأدوات التي يستخدمها الكارتوجرافي لتنفيذ عملية التعميم على الرموز بأنواعها الثلاثة:
+      </p>
+      <br>
+      <span class="tag">🔵 رموز موضعية (نقطية)</span>
+      <span class="tag">🟡 رموز خطية</span>
+      <span class="tag">🟢 رموز مساحية</span>
+    </div>
+
+    <div class="elements-grid">
+
+      <!-- A -->
+      <div class="element-card">
+        <div class="element-header ec-a">
+          <div class="element-icon" style="background:#4285f420">🎯</div>
+          <div>
+            <h4>أ - الاختيار والحذف</h4>
+            <div class="en-name">Selection & Elimination</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>إمكانية إبقاء أو إزالة المعالم بصورة انتقائية من خلال تغيير مقياس الخريطة وهدفها. مقياس الرسم والغرض هما المتحكمان الرئيسيان.</p>
+          <div class="element-example ec-a">
+            <strong>📌 أمثلة:</strong>
+            الطرق: تُحتفظ الرئيسية وتُحذف الفرعية. الأودية: تُحتفظ الرتبة الأعلى وتُحذف الفروع الصغيرة. دور العبادة: تُحذف الزوايا الصغيرة والمساجد الصغيرة في صغر المقياس.
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="element-card">
+        <div class="element-header ec-b">
+          <div class="element-icon" style="background:#ea433520">〰️</div>
+          <div>
+            <h4>ب - التبسيط</h4>
+            <div class="en-name">Simplification</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>تقليل كمية البيانات الإحداثية في المعالم مع المحافظة على خصائصها الجوهرية. الاستغناء عن تفاصيل زائدة لا تخدم الغرض وغير متوافقة مع المقياس.</p>
+          <div class="element-example ec-b">
+            <strong>📌 أمثلة:</strong>
+            الكتل العمرانية: تُبسَّط تعرجاتها مع تغير المقياس. خطوط الكنتور: يُستخدم التبسيط والتنعيم لإظهارها بشكل انسيابي بعيد عن الانكسارات الشديدة.
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="element-card">
+        <div class="element-header ec-c">
+          <div class="element-icon" style="background:#34a85320">✨</div>
+          <div>
+            <h4>ج - التحسين</h4>
+            <div class="en-name">Refinement</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>اختزال بعض الأجزاء الداخلية للظاهرة للوصول بها إلى شكل نموذجي يحقق نفس الانطباع المرئي، مع الحفاظ على نفس الحيز المساحي الذي تشغله.</p>
+          <div class="element-example ec-c">
+            <strong>📌 مثال:</strong>
+            تحسين شكل المنحنيات لخطوط الكنتور أو الشواطئ بحيث تظل معبرة عن الشكل الطبيعي دون تفاصيل زائدة.
+          </div>
+        </div>
+      </div>
+
+      <!-- D -->
+      <div class="element-card">
+        <div class="element-header ec-d">
+          <div class="element-icon" style="background:#fbbc0420">🧩</div>
+          <div>
+            <h4>د - التجميع</h4>
+            <div class="en-name">Aggregation</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>تجميع مجموعة من الظاهرات الصغيرة نسبياً في شكل أكبر مساحة يكون أوضح وأكثر تعبيراً. يُشترط التجانس بين الظاهرات المجمَّعة.</p>
+          <div class="element-example ec-d">
+            <strong>📌 مثال:</strong>
+            الكتل السكنية في الخرائط الطبوغرافية: مجموعات من المباني المتفرقة تُجمع في كتلة واحدة عند تصغير المقياس، وتكون درجة التجميع طبقاً للمقياس المستخدم.
+          </div>
+        </div>
+      </div>
+
+      <!-- E -->
+      <div class="element-card">
+        <div class="element-header ec-e">
+          <div class="element-icon" style="background:#c0392b20">📉</div>
+          <div>
+            <h4>هـ - التقلص</h4>
+            <div class="en-name">Collapse</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>تقليل أبعاد الظاهرات الجغرافية وفقاً لقيم يحددها مقياس رسم الخريطة. قد تتقلص ظاهرة مساحية إلى نقطة موضعية، أو ظاهرة خطية ممثلة بخطين إلى خط واحد.</p>
+          <div class="element-example ec-e">
+            <strong>📌 مثال:</strong>
+            الطرق في الخرائط الطبوغرافية: الطريق الذي له حافتان (يُمثَّل بخطين) في الخريطة الكبيرة يُمثَّل بخط واحد في الخريطة الأصغر.
+          </div>
+        </div>
+      </div>
+
+      <!-- F -->
+      <div class="element-card">
+        <div class="element-header ec-f">
+          <div class="element-icon" style="background:#2e7d3220">🔍</div>
+          <div>
+            <h4>و - المبالغة</h4>
+            <div class="en-name">Exaggeration</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>عكس التقلص تماماً: تكبير أبعاد الظاهرة لزيادة التأكيد على وجودها وجذب الانتباه إليها، مع الحفاظ على الانطباع المرئي الصحيح لها.</p>
+          <div class="element-example ec-f">
+            <strong>📌 أمثلة:</strong>
+            المدقات الصحراوية ذات الأبعاد الصغيرة: يُكبَّر رمزها لأهميتها في النقل. المدارس ودور العبادة: تُحوَّل من ظاهرات مساحية إلى رموز موضعية مبالَغ في حجمها لتسهيل التحديد.
+          </div>
+        </div>
+      </div>
+
+      <!-- G -->
+      <div class="element-card">
+        <div class="element-header ec-g">
+          <div class="element-icon" style="background:#7b1fa220">↔️</div>
+          <div>
+            <h4>ز - الإزاحة</h4>
+            <div class="en-name">Displacement</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>إيضاح بعض الظاهرات بتغيير مواضعها الهندسية عن مواضعها الحقيقية، عندما لا يسمح مقياس الرسم بإظهار المسافة الفاصلة بين ظاهرتين متجاورتين دون أن تطمس إحداهما الأخرى.</p>
+          <div class="element-example ec-g">
+            <strong>📌 مثال:</strong>
+            طريق رئيسي وخط سكة حديد يمران بمحاذاة بعضهما: عند تصغير المقياس يندمجان، فتُزاح إحدى الظاهرتين قليلاً للحفاظ على وضوح كليهما — وتكون الإزاحة على حساب الأقل أهمية.
+          </div>
+        </div>
+      </div>
+
+      <!-- H -->
+      <div class="element-card">
+        <div class="element-header ec-h">
+          <div class="element-icon" style="background:#1565c020">🏷️</div>
+          <div>
+            <h4>ح - التصنيف والترميز</h4>
+            <div class="en-name">Classification & Symbolization</div>
+          </div>
+        </div>
+        <div class="element-body">
+          <p>تجميع الظاهرات المتشابهة الخصائص في مجموعات، وتمثيل كل مجموعة برمز واحد يشمل كافة ظاهراتها. يسمح بتبسيط المحتوى مع الحفاظ على المعنى.</p>
+          <div class="element-example ec-h">
+            <strong>📌 مثال:</strong>
+            المناطق الأثرية: رغم اختلافها (فرعونية - رومانية - إسلامية - يونانية) تُمثَّل جميعها برمز واحد موحد يدل على "الموقع الأثري". الطرق تُصنَّف حسب أهميتها وتُعطى رموزاً مختلفة.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Summary table -->
+    <div style="margin-top:50px">
+      <div class="card card-gold">
+        <h3>📊 ملخص عناصر التعميم — جدول المقارنة السريعة</h3>
+        <div style="overflow-x:auto;margin-top:16px">
+          <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
+            <thead>
+              <tr style="background:var(--navy);color:white">
+                <th style="padding:12px 16px;text-align:right;border-radius:8px 0 0 0">العنصر</th>
+                <th style="padding:12px 16px;text-align:right">الوظيفة</th>
+                <th style="padding:12px 16px;text-align:right">الأكثر تطبيقاً على</th>
+                <th style="padding:12px 16px;text-align:right;border-radius:0 8px 0 0">النتيجة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f8f9fa">
+                <td style="padding:10px 16px;font-weight:700;color:#4285f4">الاختيار/الحذف</td>
+                <td style="padding:10px 16px">إبقاء المهم وإزالة غير المهم</td>
+                <td style="padding:10px 16px">جميع أنواع الرموز</td>
+                <td style="padding:10px 16px">تقليل عدد الظاهرات</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-weight:700;color:#ea4335">التبسيط</td>
+                <td style="padding:10px 16px">تقليل النقاط الإحداثية</td>
+                <td style="padding:10px 16px">الرموز المساحية والخطية</td>
+                <td style="padding:10px 16px">شكل أقل تعقيداً</td>
+              </tr>
+              <tr style="background:#f8f9fa">
+                <td style="padding:10px 16px;font-weight:700;color:#34a853">التحسين</td>
+                <td style="padding:10px 16px">إعادة تشكيل الظاهرة نموذجياً</td>
+                <td style="padding:10px 16px">الخطوط الإنسيابية</td>
+                <td style="padding:10px 16px">نفس الحيز المساحي</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-weight:700;color:#fbbc04">التجميع</td>
+                <td style="padding:10px 16px">دمج ظاهرات صغيرة متجانسة</td>
+                <td style="padding:10px 16px">الكتل السكنية</td>
+                <td style="padding:10px 16px">وحدة أكبر وأوضح</td>
+              </tr>
+              <tr style="background:#f8f9fa">
+                <td style="padding:10px 16px;font-weight:700;color:#c0392b">التقلص</td>
+                <td style="padding:10px 16px">تقليل أبعاد الظاهرة</td>
+                <td style="padding:10px 16px">الطرق والمناطق</td>
+                <td style="padding:10px 16px">ظاهرة بُعد أقل</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-weight:700;color:#2e7d32">المبالغة</td>
+                <td style="padding:10px 16px">تكبير أبعاد الظاهرة</td>
+                <td style="padding:10px 16px">المدقات ودور العبادة</td>
+                <td style="padding:10px 16px">وضوح رغم الصغر</td>
+              </tr>
+              <tr style="background:#f8f9fa">
+                <td style="padding:10px 16px;font-weight:700;color:#7b1fa2">الإزاحة</td>
+                <td style="padding:10px 16px">تغيير موضع الظاهرة</td>
+                <td style="padding:10px 16px">الظاهرات المتجاورة</td>
+                <td style="padding:10px 16px">وضوح كلتا الظاهرتين</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-weight:700;color:#1565c0">التصنيف/الترميز</td>
+                <td style="padding:10px 16px">توحيد الظاهرات المتشابهة برمز</td>
+                <td style="padding:10px 16px">جميع أنواع الرموز</td>
+                <td style="padding:10px 16px">تبسيط منطقي للمحتوى</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== VECTOR vs RASTER ===== -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-num" style="background:linear-gradient(135deg,#1a5c1a,#0e7c7b)">٧</div>
+      <div>
+        <div class="section-title"><span>سابعاً</span>أنواع التعميم في نظم المعلومات الجغرافية</div>
+      </div>
+    </div>
+    <div class="divider" style="background:linear-gradient(90deg,#1a5c1a,#0e7c7b,transparent)"></div>
+
+    <div class="types-grid">
+      <div class="type-card" style="background:linear-gradient(135deg,#0d2244,#4a148c)">
+        <span class="type-badge">النوع الأول</span>
+        <h3>📐 تعميم البيانات الخطية (Vector)</h3>
+        <p>
+          يعتمد على نموذج البيانات الخطي المتجه (Vector Model)، ويشمل تعميم الرموز الموضعية (النقطية) والخطية والمساحية.
+          <br><br>
+          يُطبَّق عليه جميع العناصر الثمانية: الاختيار، التبسيط، التحسين، التجميع، التقلص، المبالغة، الإزاحة، والتصنيف.
+        </p>
+      </div>
+      <div class="type-card" style="background:linear-gradient(135deg,#1b5e20,#0288d1)">
+        <span class="type-badge">النوع الثاني</span>
+        <h3>🔲 تعميم البيانات الشبكية (Raster)</h3>
+        <p>
+          يعتمد على نموذج الشبكة النقطية (Raster Model)، وهو نظام يمثل الظاهرات الجغرافية على شكل خلايا (بيكسل) في شبكة منتظمة.
+          <br><br>
+          تختلف أساليب تعميمه عن البيانات الخطية وتعتمد بشكل رئيسي على دقة الخلية (Cell Size) ومرشحات التجميع والمتوسط.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-size:2.5rem;margin-bottom:16px">🗺️</div>
+  <p>محاضرة <span>التعميم الكارتوجرافي</span></p>
+  <p style="margin-top:8px;font-size:0.8rem;opacity:0.5">Cartographic Generalization — علم رسم الخرائط</p>
+</footer>
+
+</body>
+</html>
