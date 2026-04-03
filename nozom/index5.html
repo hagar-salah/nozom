@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مبادئ تصميم الخرائط — الفصل الأول</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f1a;
+    --surface: #141626;
+    --surface2: #1c1f35;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaf6;
+    --muted: #8b90b8;
+
+    --teal:   #00d4aa;
+    --teal-d: #00906e;
+    --teal-bg: rgba(0,212,170,0.08);
+
+    --amber:  #f5a623;
+    --amber-d:#c4771a;
+    --amber-bg: rgba(245,166,35,0.08);
+
+    --coral:  #ff6b6b;
+    --coral-d:#c43d3d;
+    --coral-bg: rgba(255,107,107,0.08);
+
+    --blue:   #4a9eff;
+    --blue-d: #1e6fcc;
+    --blue-bg: rgba(74,158,255,0.08);
+
+    --purple: #a78bfa;
+    --purple-d:#7c3aed;
+    --purple-bg: rgba(167,139,250,0.08);
+
+    --pink:   #f472b6;
+    --pink-d: #be185d;
+    --pink-bg: rgba(244,114,182,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, #0d0f1a 0%, #1a1040 50%, #0d0f1a 100%);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(167,139,250,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    display: inline-block;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--purple);
+    text-transform: uppercase;
+    border: 1px solid rgba(167,139,250,0.3);
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #fff 0%, var(--purple) 60%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    line-height: 1.8;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--purple);
+    display: block;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 24px 80px;
+  }
+
+  /* ─── SECTION CARD ─── */
+  .section-card {
+    margin-bottom: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .section-card:hover {
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 20px 60px -20px rgba(0,0,0,0.5);
+  }
+
+  /* ─── SECTION HEADER (clickable) ─── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 28px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .section-header:hover {
+    background: rgba(255,255,255,0.02);
+  }
+  .section-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 900;
+  }
+  .section-meta {
+    flex: 1;
+  }
+  .section-number {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-family: 'Tajawal', sans-serif;
+    opacity: 0.6;
+    margin-bottom: 4px;
+  }
+  .section-title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .chevron {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    transition: transform 0.3s, background 0.2s;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-card.open .chevron {
+    transform: rotate(180deg);
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+  }
+
+  /* ─── SECTION BODY ─── */
+  .section-body {
+    display: none;
+    padding: 0 28px 28px;
+    border-top: 1px solid var(--border);
+    animation: fadeIn 0.25s ease;
+  }
+  .section-card.open .section-body { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── INTRO TEXT ─── */
+  .intro-text {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--muted);
+    padding: 20px 0 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  /* ─── FLOW STAGES ─── */
+  .stages-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 0;
+  }
+  .stage-item {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    position: relative;
+  }
+  .stage-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+    flex-shrink: 0;
+  }
+  .stage-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+    color: #0d0f1a;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .stage-line {
+    width: 2px;
+    flex: 1;
+    min-height: 16px;
+    margin: 0 auto;
+  }
+  .stage-last .stage-line { display: none; }
+  .stage-content {
+    flex: 1;
+    padding: 8px 0 20px 16px;
+  }
+  .stage-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .stage-desc {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ─── PRINCIPLES GRID ─── */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    padding: 8px 0;
+  }
+  .principle-card {
+    background: var(--surface2);
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .principle-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .principle-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    font-family: 'Tajawal', sans-serif;
+    opacity: 0.7;
+  }
+  .principle-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .principle-desc {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ─── SUB SECTIONS ─── */
+  .subsection {
+    margin-bottom: 24px;
+  }
+  .subsection-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Tajawal', sans-serif;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subsection-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 16px;
+    border-radius: 2px;
+  }
+
+  /* ─── BULLET LIST ─── */
+  .bullet-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bullet-list li {
+    display: flex;
+    gap: 10px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    align-items: flex-start;
+  }
+  .bullet-list li::before {
+    content: '◆';
+    font-size: 8px;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .bullet-list li strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ─── NUMBERED LIST ─── */
+  .numbered-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    counter-reset: num;
+  }
+  .numbered-list li {
+    display: flex;
+    gap: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    align-items: flex-start;
+    counter-increment: num;
+  }
+  .numbered-list li::before {
+    content: counter(num);
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: #0d0f1a;
+    margin-top: 1px;
+  }
+  .numbered-list li strong { color: var(--text); font-weight: 600; }
+
+  /* ─── INFO BOX ─── */
+  .info-box {
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin: 16px 0;
+  }
+  .info-box-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .info-box-text {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    flex: 1;
+  }
+  .info-box-text strong { display: block; font-weight: 700; margin-bottom: 4px; font-size: 15px; }
+
+  /* ─── SYMBOLS TABLE ─── */
+  .symbol-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .symbol-table th {
+    background: rgba(255,255,255,0.06);
+    padding: 10px 14px;
+    text-align: right;
+    font-weight: 700;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .symbol-table td {
+    padding: 10px 14px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .symbol-table tr:last-child td { border-bottom: none; }
+  .symbol-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* ─── COLOR PALETTE VISUAL ─── */
+  .color-dims {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .color-dim-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    flex: 1;
+    min-width: 160px;
+    text-align: center;
+  }
+  .color-dim-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .color-dim-sub {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .hue-bar {
+    height: 8px;
+    border-radius: 4px;
+    margin: 8px 0;
+    background: linear-gradient(to left, #ff0000, #ff8000, #ffff00, #00ff00, #0000ff, #8000ff, #ff0000);
+  }
+  .value-bar {
+    height: 8px; border-radius: 4px; margin: 8px 0;
+    background: linear-gradient(to left, #fff, #000);
+  }
+  .intensity-bar {
+    height: 8px; border-radius: 4px; margin: 8px 0;
+    background: linear-gradient(to left, #ccc, #e74c3c);
+  }
+
+  /* ─── WARM COOL PALETTE ─── */
+  .warm-cool {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  .palette-group {
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid var(--border);
+  }
+  .palette-group-title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .palette-swatches {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .swatch {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    cursor: default;
+    transition: transform 0.15s;
+  }
+  .swatch:hover { transform: scale(1.1); }
+
+  /* ─── SUMMARY BOX ─── */
+  .summary {
+    background: linear-gradient(135deg, rgba(167,139,250,0.08), rgba(0,212,170,0.05));
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 14px;
+    padding: 28px;
+    margin-top: 40px;
+    text-align: center;
+  }
+  .summary h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 20px;
+  }
+  .summary-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    text-align: right;
+  }
+  .summary-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .summary-item-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .summary-item-text {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .summary-item-text strong { color: var(--text); font-weight: 700; }
+
+  /* ─── PRINT BUTTON ─── */
+  .print-bar {
+    text-align: center;
+    padding: 20px;
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(transparent, var(--bg) 40%);
+    pointer-events: none;
+  }
+  .print-btn {
+    pointer-events: all;
+    background: var(--purple);
+    color: #0d0f1a;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 8px 30px rgba(167,139,250,0.4);
+  }
+  .print-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  /* ─── COLOR CODING ─── */
+  .teal   .section-icon { background: var(--teal-bg); color: var(--teal); }
+  .teal   .section-header { border-right: 3px solid var(--teal); }
+  .teal   .section-number { color: var(--teal); }
+  .teal   .section-card.open { border-color: rgba(0,212,170,0.25); box-shadow: 0 0 0 1px rgba(0,212,170,0.1); }
+  .teal   .stage-num { background: var(--teal); }
+  .teal   .stage-line { background: linear-gradient(var(--teal), transparent); }
+  .teal   .stage-name { color: var(--teal); }
+  .teal   .subsection-title::before { background: var(--teal); }
+  .teal   .bullet-list li::before, .teal .numbered-list li::before { color: var(--teal); background: var(--teal-bg); }
+  .teal   .info-box { background: var(--teal-bg); border: 1px solid rgba(0,212,170,0.2); }
+
+  .amber  .section-icon { background: var(--amber-bg); color: var(--amber); }
+  .amber  .section-header { border-right: 3px solid var(--amber); }
+  .amber  .section-number { color: var(--amber); }
+  .amber  .section-card.open { border-color: rgba(245,166,35,0.25); box-shadow: 0 0 0 1px rgba(245,166,35,0.1); }
+  .amber  .principle-num { color: var(--amber); }
+  .amber  .principle-name { color: var(--amber); }
+  .amber  .principle-card { border-color: rgba(245,166,35,0.15); }
+  .amber  .principle-card:hover { border-color: rgba(245,166,35,0.3); }
+  .amber  .subsection-title::before { background: var(--amber); }
+  .amber  .numbered-list li::before { background: var(--amber-bg); color: var(--amber); }
+  .amber  .bullet-list li::before { color: var(--amber); }
+
+  .coral  .section-icon { background: var(--coral-bg); color: var(--coral); }
+  .coral  .section-header { border-right: 3px solid var(--coral); }
+  .coral  .section-number { color: var(--coral); }
+  .coral  .section-card.open { border-color: rgba(255,107,107,0.25); box-shadow: 0 0 0 1px rgba(255,107,107,0.1); }
+  .coral  .subsection-title::before { background: var(--coral); }
+  .coral  .subsection-title { color: var(--coral); }
+  .coral  .numbered-list li::before { background: var(--coral-bg); color: var(--coral); }
+  .coral  .bullet-list li::before { color: var(--coral); }
+  .coral  .info-box { background: var(--coral-bg); border: 1px solid rgba(255,107,107,0.2); }
+
+  .blue   .section-icon { background: var(--blue-bg); color: var(--blue); }
+  .blue   .section-header { border-right: 3px solid var(--blue); }
+  .blue   .section-number { color: var(--blue); }
+  .blue   .section-card.open { border-color: rgba(74,158,255,0.25); box-shadow: 0 0 0 1px rgba(74,158,255,0.1); }
+  .blue   .subsection-title::before { background: var(--blue); }
+  .blue   .subsection-title { color: var(--blue); }
+  .blue   .numbered-list li::before { background: var(--blue-bg); color: var(--blue); }
+  .blue   .bullet-list li::before { color: var(--blue); }
+  .blue   .tag { background: var(--blue-bg); color: var(--blue); }
+
+  .purple .section-icon { background: var(--purple-bg); color: var(--purple); }
+  .purple .section-header { border-right: 3px solid var(--purple); }
+  .purple .section-number { color: var(--purple); }
+  .purple .section-card.open { border-color: rgba(167,139,250,0.25); }
+  .purple .numbered-list li::before { background: var(--purple-bg); color: var(--purple); }
+
+  .pink   .section-icon { background: var(--pink-bg); color: var(--pink); }
+  .pink   .section-header { border-right: 3px solid var(--pink); }
+  .pink   .section-number { color: var(--pink); }
+  .pink   .section-card.open { border-color: rgba(244,114,182,0.25); }
+  .pink   .numbered-list li::before { background: var(--pink-bg); color: var(--pink); }
+
+  /* ─── PRINT STYLES ─── */
+  @media print {
+    body { background: #fff; color: #111; }
+    .hero { background: #f0eaff; border-bottom: 2px solid #a78bfa; }
+    .hero h1 { -webkit-text-fill-color: #5b21b6; }
+    .section-card { border: 1px solid #ddd; break-inside: avoid; }
+    .section-body { display: block !important; }
+    .chevron, .print-bar { display: none; }
+    .section-header { border-bottom: 1px solid #eee; }
+    .surface { background: #fafafa; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-label">CHAPTER ONE • الفصل الأول</div>
+  <h1>مبادئ تصميم الخرائط</h1>
+  <p>التصميم في علم الخرائط هو التخطيط العام لتفاصيل الخريطة وتنسيق عناصرها المختلفة وانتخاب الرموز المناسبة</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">٦</span><span class="stat-label">مراحل تصميم</span></div>
+    <div class="stat"><span class="stat-num">٥</span><span class="stat-label">مبادئ أساسية</span></div>
+    <div class="stat"><span class="stat-num">٣</span><span class="stat-label">عناصر تصميم</span></div>
+    <div class="stat"><span class="stat-num">٨٣٪</span><span class="stat-label">دور البصر في التعلم</span></div>
+  </div>
+</div>
+
+<!-- ─── CONTENT ─── -->
+<div class="container">
+
+  <!-- ══ SECTION 1: مراحل التصميم ══ -->
+  <div class="section-card teal" id="s1">
+    <div class="section-header" onclick="toggle('s1')">
+      <div class="section-icon">①</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 01 • أولاً</div>
+        <div class="section-title">مراحل تصميم الخريطة</div>
+        <div class="section-subtitle">ست مراحل متسلسلة مع تغذية عكسية مستمرة</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <p class="intro-text">يتوجب عند التصميم للخرائط القيام بمجموعة من الخطوات والمراحل المتسلسلة. يمكن تحديد ست مراحل أساسية، وتستمر عملية التغذية العكسية في كل مرحلة إذ أن كل تصميم يعلمنا شيئاً نحو حل المشاكل المستقبلية.</p>
+
+      <div class="stages-flow">
+        <div class="stage-item">
+          <div class="stage-left"><div class="stage-num" style="background:var(--teal);">١</div><div class="stage-line" style="background:linear-gradient(var(--teal),transparent);"></div></div>
+          <div class="stage-content"><div class="stage-name" style="color:var(--teal);">تعيين المشكلة — Problem Identification</div><div class="stage-desc">تعريف الهدف من الخريطة وقارئها والعوامل الأخرى ذات العلاقة كالتكلفة والاعتبارات التقنية.</div></div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-left"><div class="stage-num" style="background:var(--teal);">٢</div><div class="stage-line" style="background:linear-gradient(var(--teal),transparent);"></div></div>
+          <div class="stage-content"><div class="stage-name" style="color:var(--teal);">الأفكار الأولية — Preliminary Ideas</div><div class="stage-desc">التركيز على عقل الإنسان في تجميع الأفكار للمشكلة والعمل على التفكير الخلاق لإيجاد الحلول من خلال الخزن البصري للأفكار.</div></div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-left"><div class="stage-num" style="background:var(--teal);">٣</div><div class="stage-line" style="background:linear-gradient(var(--teal),transparent);"></div></div>
+          <div class="stage-content"><div class="stage-name" style="color:var(--teal);">تحسين التصميم — Design Refinement</div><div class="stage-desc">تقييم كل الأفكار الأولية وقبولها أو رفضها من خلال مراجعتها وتوقيعها. يسجل الخرائطي أولياً لمشروع رسمه.</div></div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-left"><div class="stage-num" style="background:var(--teal);">٤</div><div class="stage-line" style="background:linear-gradient(var(--teal),transparent);"></div></div>
+          <div class="stage-content"><div class="stage-name" style="color:var(--teal);">التحليل — Analysis</div><div class="stage-desc">عمل نماذج متعددة لتصميم الخريطة بشكل يمكن رؤيته ومقارنته. في وقتنا المعاصر يمكن عمل نماذج على الحاسب الآلي.</div></div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-left"><div class="stage-num" style="background:var(--teal);">٥</div><div class="stage-line" style="background:linear-gradient(var(--teal),transparent);"></div></div>
+          <div class="stage-content"><div class="stage-name" style="color:var(--teal);">القرار — Decision</div><div class="stage-desc">تستند مرحلة اتخاذ القرار على البحث والحقائق المكتشفة من المرحلة السابقة، ثم اختيار النموذج الأفضل لقبوله.</div></div>
+        </div>
+        <div class="stage-item stage-last">
+          <div class="stage-left"><div class="stage-num" style="background:var(--teal);">٦</div><div class="stage-line"></div></div>
+          <div class="stage-content"><div class="stage-name" style="color:var(--teal);">التنفيذ — Implementation</div><div class="stage-desc">المرحلة الأخيرة في تصميم الخريطة والعمل على رسمها وأدائها بالشكل النهائي.</div></div>
+        </div>
+      </div>
+
+      <div class="info-box teal" style="margin-top:16px;">
+        <div class="info-box-icon">↻</div>
+        <div class="info-box-text" style="color:var(--teal);"><strong>التغذية العكسية</strong>تستمر عملية التغذية العكسية في كل مراحل التصميم — كل تصميم يعلمنا شيئاً جديداً نحو حل المشاكل المستقبلية وزيادة كفاءة المصممين.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 2: مبادئ التصميم ══ -->
+  <div class="section-card amber" id="s2">
+    <div class="section-header" onclick="toggle('s2')">
+      <div class="section-icon">②</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 02 • ثانياً</div>
+        <div class="section-title">مبادئ تصميم الخريطة</div>
+        <div class="section-subtitle">خمسة مبادئ أساسية يرتكز عليها التصميم الجيد</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="principles-grid">
+        <div class="principle-card amber">
+          <div class="principle-num">PRINCIPLE 01</div>
+          <div class="principle-name">مضمون الخريطة</div>
+          <div class="principle-desc">دراسة الظواهر الطبيعية والبشرية وخاصةً في المناطق الكثيفة التفاصيل. تحديد المضمون يعطي الخرائطي صورة عن عملية تصميمها ويمكنه من إجراء التعميم الخرائطي (حذف غير الضروري).</div>
+        </div>
+        <div class="principle-card amber">
+          <div class="principle-num">PRINCIPLE 02</div>
+          <div class="principle-name">الدقة العلمية</div>
+          <div class="principle-desc">دقة تسقيط وتمثيل المعلومات المكانية من حيث الموقع والشكل والامتداد، فضلاً عن دقة مقياس الرسم والمسقط المستخدم ونوعه. للخرائط الكمية يجب التأكد من دقة الأرقام والإحصاءات.</div>
+        </div>
+        <div class="principle-card amber">
+          <div class="principle-num">PRINCIPLE 03</div>
+          <div class="principle-name">الوضوح</div>
+          <div class="principle-desc">يجب أن تكون عناصر الخريطة واضحة ومفهومة وقابلة للتفسير من خلال الاختيار الجيد للخطوط والأشكال والألوان والتعبير عن مضمون الخريطة. الحجم المناسب للرموز شرط أساسي للوضوح.</div>
+        </div>
+        <div class="principle-card amber">
+          <div class="principle-num">PRINCIPLE 04</div>
+          <div class="principle-name">المستويات البصرية</div>
+          <div class="principle-desc">توفر مستويات بصرية متفاوتة حسب أهمية الظاهرات: التفاصيل المهمة بارزة كصورة أمامية، والثانوية كخلفية. يستخدم الخرائطي التباين للتمييز بينهما عبر أشكال مختلفة وسمك خطوط متباين.</div>
+        </div>
+        <div class="principle-card amber" style="grid-column: span 1;">
+          <div class="principle-num">PRINCIPLE 05</div>
+          <div class="principle-name">الإدراك</div>
+          <div class="principle-desc">الإنسان يتفاعل مع بيئته وينتقي ما يلفت انتباهه. تصميم الخريطة يجب أن يجذب اهتمام القارئ من خلال فهم عوامل الإدراك الخمسة.</div>
+        </div>
+      </div>
+
+      <div class="subsection" style="margin-top:24px;">
+        <div class="subsection-title" style="color:var(--amber);">عوامل الإدراك الخمسة</div>
+        <ol class="numbered-list">
+          <li><strong>النمطية:</strong> الصورة التي يحملها مصمم الخريطة عن الخريطة وأسلوبه في تصنيف الرموز.</li>
+          <li><strong>الانتقاء:</strong> قدرة مصمم الخريطة على انتقاء واختيار المعلومات والرموز المناسبة للخريطة.</li>
+          <li><strong>عوامل الموقف:</strong> كاتجاهات مصممي الخرائط واختيارهم الألوان وعوامل الشدة واللمعان والمكان والوقت.</li>
+          <li><strong>الحاجات والرغبات:</strong> الإنسان يرى ما يرغب في رؤيته لأن عمليات الإدراك تتأثر بشكل كبير بالحاجات.</li>
+          <li><strong>العواطف:</strong> تلعب الحالة العاطفية للإنسان دوراً كبيراً في إدراكه — على مصممي الخرائط مراعاة عواطف القارئ وميوله.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 3: الاتصال الخرائطي ══ -->
+  <div class="section-card coral" id="s3">
+    <div class="section-header" onclick="toggle('s3')">
+      <div class="section-icon">③</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 03 • ثالثاً</div>
+        <div class="section-title">أهمية الاتصال الخرائطي</div>
+        <div class="section-subtitle">Cartographic Communication — نقل المعلومة من الخرائطي إلى القارئ</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+      <p class="intro-text">الاتصال الخرائطي هو أسلوب ترميزي لتوصيل المعلومات من المرسل (الخرائطي) إلى المستقبل (مستخدم الخريطة) عبر وسيلة اتصال مرئية هي الخريطة. يقوم المستقبل بقراءتها واستخراج المعلومات ثم التحليل والتعليل والمقارنة والتطبيق.</p>
+
+      <div class="subsection">
+        <div class="subsection-title">أشكال الاتصال</div>
+        <div class="principles-grid">
+          <div class="principle-card" style="border-color:rgba(255,107,107,0.2);">
+            <div class="principle-name" style="color:var(--coral);">الرسم</div>
+            <div class="principle-desc">الأقرب للحقيقة — هو الأسلوب الأمثل في الخريطة لأنه يعطي صورة واضحة مباشرة.</div>
+          </div>
+          <div class="principle-card" style="border-color:rgba(255,107,107,0.2);">
+            <div class="principle-name" style="color:var(--coral);">اللفظ</div>
+            <div class="principle-desc">بين الحقيقة والتجريد — يجب تجنب التعابير اللفظية داخل الخريطة واستبدالها بالرموز والألوان.</div>
+          </div>
+          <div class="principle-card" style="border-color:rgba(255,107,107,0.2);">
+            <div class="principle-name" style="color:var(--coral);">الرقم</div>
+            <div class="principle-desc">الأقرب للتجريد — يجب تحويل الأرقام الكمية والإحصائية إلى دلالات رمزية أو لونية.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">شروط المصمم لتحسين الاتصال الخرائطي</div>
+        <ol class="numbered-list">
+          <li>الإلمام بأساسيات تصميم الخريطة.</li>
+          <li>الإلمام بالأساليب الخرائطية المناسبة لتمثيل البيانات والمعلومات.</li>
+          <li>الاهتمام بصحة البيانات والمعلومات المراد تمثيلها بما يتفق مع الطريقة المختارة لبناء الخريطة.</li>
+          <li>الإلمام ببعض جوانب التأثير النفسي على مستخدم الخريطة.</li>
+        </ol>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">المستويات الذهنية الثلاثة لمستخدم الخريطة</div>
+        <ol class="numbered-list">
+          <li><strong>المستوى الأول:</strong> مقارنة سمات الرموز الخرائطية من حيث الشكل والحجم النسبي والأهمية.</li>
+          <li><strong>المستوى الثاني:</strong> إدراك خواص مجموعات الرموز ككل من حيث الشكل ومشابهتها لأنماط رموز خرائطية أخرى.</li>
+          <li><strong>المستوى الثالث:</strong> اتخاذ قرار بناءً على المجال المعرفي من خلال دمج الرموز والأشكال مع معلومات أخرى.</li>
+        </ol>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">شروط التصميم وفق متطلبات الاتصال</div>
+        <ol class="numbered-list">
+          <li><strong>الإثارة البصرية:</strong> الإنسان يعطي الأولوية للمعلومات القادمة من خلال الجهاز البصري.</li>
+          <li>ملاءمة الخريطة لطبيعة الإدراك عند المتعلمين.</li>
+          <li><strong>ضبط الكثافة البصرية:</strong> كثافة المعطيات تنشأ عنها التداخل والتشويش وتشتت الذهن.</li>
+          <li><strong>وضوح الهدف:</strong> تجنب التباسات الفهم واختيار اللغة السليمة التي تتناسب مع قدرة القارئ.</li>
+          <li><strong>مصداقية المرسل:</strong> تتوقف على القوة والكفاءة والثقة والجدارة وتوضيح الفكرة.</li>
+        </ol>
+      </div>
+
+      <div class="info-box" style="background:var(--coral-bg); border:1px solid rgba(255,107,107,0.2);">
+        <div class="info-box-icon">👁</div>
+        <div class="info-box-text" style="color:var(--coral);"><strong>حقيقة مهمة</strong>أثبتت البحوث والدراسات أن حاسة البصر تسهم بنسبة <strong>٨٣٪</strong> في عملية التعلم، مما يجعل الخريطة بوصفها وسيلة اتصال مرئية أداةً بالغة التأثير.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 4: عناصر التصميم ══ -->
+  <div class="section-card blue" id="s4">
+    <div class="section-header" onclick="toggle('s4')">
+      <div class="section-icon">④</div>
+      <div class="section-meta">
+        <div class="section-number">SECTION 04 • رابعاً</div>
+        <div class="section-title">عناصر تصميم الخرائط</div>
+        <div class="section-subtitle">الرموز · الألوان · الخط والأسماء</div>
+      </div>
+      <div class="chevron">▾</div>
+    </div>
+    <div class="section-body">
+
+      <!-- الرموز -->
+      <div class="subsection">
+        <div class="subsection-title">١. الرموز</div>
+        <p style="font-family:'Tajawal',sans-serif;font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:16px;">الرموز هي حصيلة طرق كارتوجرافية يمكن من خلالها التعبير عن ظواهر محددة مهما كانت طريقة التعبير.</p>
+
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px;font-family:'Tajawal',sans-serif;">أ. خصائص الرموز الجيدة</div>
+        <ul class="bullet-list">
+          <li><strong>التفرد والميزة النسبية:</strong> يجب أن يكون هيكل الرمز معبراً عن كيانه ودلالته.</li>
+          <li><strong>الملاءمة والبساطة:</strong> بسيط وملائم وسهل الفهم والتذكر ومعد للإدخال الآلي.</li>
+          <li><strong>المحدودية والثبات:</strong> ألا تجري عليه تعديلات كثيرة مع قابليته لإدخال عناصر جديدة.</li>
+          <li>منتظم الشكل مع التعبير الجيد عن كيانه بكل دقة.</li>
+          <li>التناسب بين شكل وحجم الرمز مع مقياس الخريطة.</li>
+        </ul>
+
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin:18px 0 10px;font-family:'Tajawal',sans-serif;">ب. تصنيف الرموز</div>
+        <table class="symbol-table">
+          <thead>
+            <tr><th>أساس التصنيف</th><th>النوع</th><th>الوصف والمثال</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="tag">من حيث المعنى</span></td><td style="color:var(--text);font-weight:600;">ذات المعنى الدلالي</td><td>المعنى الذي يلقى اتفاقاً جماعياً (السيميولوجيا / السيميوطيقا). درس علم الرموز من قِبل سوسير.</td></tr>
+            <tr><td></td><td style="color:var(--text);font-weight:600;">ذات المعنى الرمزي</td><td>المعنى الإضافي الذي يوحي به الرمز، يختلف تبعاً للمتغيرات الشخصية والثقافية والاجتماعية.</td></tr>
+            <tr><td><span class="tag">من حيث الدلالة</span></td><td style="color:var(--text);font-weight:600;">رموز نوعية</td><td>تبين الاختلافات في النوع فقط دون الكمية.</td></tr>
+            <tr><td></td><td style="color:var(--text);font-weight:600;">رموز كمية</td><td>توضح معلومات إضافية تختص بالاختلاف في الدرجة أو الكمية.</td></tr>
+            <tr><td><span class="tag">التصنيف الفني</span></td><td style="color:var(--text);font-weight:600;">المقياس الاسمي</td><td>يُستخدم لبيان الظاهرة نوعياً أو اسمياً. مثال: رسم مراكز المحافظات بدوائر متساوية.</td></tr>
+            <tr><td></td><td style="color:var(--text);font-weight:600;">المقياس الترتيبي</td><td>رسم الرموز بشكل متفاوت حسب الأهمية دون النظر للاختلافات الكمية.</td></tr>
+            <tr><td></td><td style="color:var(--text);font-weight:600;">المقياس البيني</td><td>يُستخدم للتعبير عن الاختلاف الكمي كالفدان والأطنان وكميات الأمطار.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- الألوان -->
+      <div class="subsection" style="margin-top:28px;">
+        <div class="subsection-title">٢. الألوان</div>
+        <p style="font-family:'Tajawal',sans-serif;font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:16px;">يعد عنصر الألوان من العناصر المهمة في تصميم الخريطة، وله صعوبات في التمثيل والإدراك ناتجة عن خواصه الثلاثة.</p>
+
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px;font-family:'Tajawal',sans-serif;">أ. الأبعاد الثلاثة للألوان</div>
+        <div class="color-dims">
+          <div class="color-dim-card">
+            <div class="hue-bar"></div>
+            <div class="color-dim-label">تدرج اللون — HUE</div>
+            <div class="color-dim-sub">لون اللون نفسه: أحمر، أزرق، أخضر...</div>
+          </div>
+          <div class="color-dim-card">
+            <div class="value-bar"></div>
+            <div class="color-dim-label">القيمة — VALUE</div>
+            <div class="color-dim-sub">درجة الفاتح أو الغامق (أبيض → أسود)</div>
+          </div>
+          <div class="color-dim-card">
+            <div class="intensity-bar"></div>
+            <div class="color-dim-label">الشدة — INTENSITY</div>
+            <div class="color-dim-sub">مدى نقاء اللون وإشباعه</div>
+          </div>
+        </div>
+
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin:18px 0 10px;font-family:'Tajawal',sans-serif;">ب. الألوان الدافئة والباردة</div>
+        <div class="warm-cool">
+          <div class="palette-group" style="background:rgba(255,107,50,0.06);border-color:rgba(255,107,50,0.2);">
+            <div class="palette-group-title" style="color:#ff8c42;">ألوان دافئة — للصورة الأمامية</div>
+            <div class="palette-swatches">
+              <div class="swatch" style="background:#e74c3c;" title="أحمر"></div>
+              <div class="swatch" style="background:#e67e22;" title="برتقالي"></div>
+              <div class="swatch" style="background:#f1c40f;" title="أصفر"></div>
+            </div>
+            <p style="font-family:'Tajawal',sans-serif;font-size:12px;color:var(--muted);margin-top:8px;">تبدو أقرب للعين — تستخدم للشكل والعناصر المهمة</p>
+          </div>
+          <div class="palette-group" style="background:rgba(74,158,255,0.06);border-color:rgba(74,158,255,0.2);">
+            <div class="palette-group-title" style="color:var(--blue);">ألوان باردة — للخلفية</div>
+            <div class="palette-swatches">
+              <div class="swatch" style="background:#3498db;" title="أزرق"></div>
+              <div class="swatch" style="background:#27ae60;" title="أخضر"></div>
+              <div class="swatch" style="background:#9b59b6;" title="بنفسجي"></div>
+            </div>
+            <p style="font-family:'Tajawal',sans-serif;font-size:12px;color:var(--muted);margin-top:8px;">تبدو أبعد عن العين — تستخدم للخلفية والأرضية</p>
+          </div>
+        </div>
+
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin:18px 0 10px;font-family:'Tajawal',sans-serif;">ج. وظائف الألوان في الخرائط</div>
+        <ol class="numbered-list">
+          <li>عامل للتبسيط والتوضيح في تطوير الشكل والتنظيم المكاني للخريطة.</li>
+          <li>الإدراك العام للخريطة يرتبط بمؤثرات اللون — فهو عامل مهم في سرعة فهم الخريطة.</li>
+          <li>يعد اللون مقياساً اسمياً يمكن استخدامه مع البيانات النقطية والخطية والمساحية.</li>
+          <li>تسمح الألوان بإضافة تفاصيل أكثر وتزيد إمكانية التغيير في التصميم.</li>
+        </ol>
+
+        <div class="info-box" style="background:rgba(74,158,255,0.07);border:1px solid rgba(74,158,255,0.2);margin-top:14px;">
+          <div class="info-box-icon">🎨</div>
+          <div class="info-box-text" style="color:var(--blue);"><strong>تدرج القيمة اللونية</strong>العين لا تستطيع تمييز أكثر من <strong>٨ درجات</strong> بين الأسود والأبيض بوضوح. على الخرائطي ألا يتعدى هذه الدرجات عند تصميم خارطته.</div>
+        </div>
+      </div>
+
+      <!-- الخط -->
+      <div class="subsection" style="margin-top:28px;">
+        <div class="subsection-title">٣. الخط وكتابة الأسماء</div>
+        <p style="font-family:'Tajawal',sans-serif;font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:16px;">يستطيع الخرائطي توجيه الانتباه نحو بعض تفاصيل الخريطة من خلال انتخاب نمط الحروف وحجمها وموقعها. دقة الخط هي إحدى المؤشرات المهمة في تقويم الخرائط فنياً.</p>
+
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px;font-family:'Tajawal',sans-serif;">اعتبارات الخط الستة</div>
+        <ul class="bullet-list">
+          <li><strong>أسلوب الخط ونمطه:</strong> مظهر الحروف من ناحية التصميم وسمك أجزائها المختلفة.</li>
+          <li><strong>شكل الخط:</strong> الحرف الاستهلالي الكبير أو الصغير، مائلاً أو مستقيماً أو مركباً.</li>
+          <li><strong>حجم الخط:</strong> المساحة التي يشغلها على الخريطة من حيث كبره أو صغره.</li>
+          <li><strong>لون الخط وخلفيته:</strong> في حال استخدام ألوان بدلاً من اللون الأسود مع خلفية خاصة.</li>
+          <li><strong>طرق الخط:</strong> اليدوية أو الميكانيكية أو الملصقات الكتابية أو التصويرية.</li>
+          <li><strong>ترتيب الحروف:</strong> وضع الأسماء في المكان المناسب على الخريطة.</li>
+        </ul>
+
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin:18px 0 10px;font-family:'Tajawal',sans-serif;">مبادئ وضع الأسماء في الخريطة</div>
+        <ol class="numbered-list">
+          <li>تكون الأسماء سهلة القراءة بالرغم من تداخلها ضمن التخطيط الكثيف لتفاصيل الخريطة.</li>
+          <li>يجب أن يتم إيجاد الاسم وما يشير إليه بسرعة.</li>
+          <li>يجب ألا تؤثر الأسماء على محتويات الخريطة الأخرى وتجنب التغطية والإخفاء.</li>
+          <li>يجب أن تسهم في توضيح العلاقات بين الفراغات وامتداد المساحات المسماة.</li>
+          <li>يجب أن يتضح من طريقة ترتيب الأسماء وجود تصنيف إداري يشير إلى تسلسل الأهمية.</li>
+          <li>منع انتشار الأسماء بصورة منتظمة أو تجمعها بصورة كثيفة في الخريطة.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 5 & 6 ══ -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+    <div class="section-card purple" id="s5">
+      <div class="section-header" onclick="toggle('s5')">
+        <div class="section-icon">⑤</div>
+        <div class="section-meta">
+          <div class="section-number">SECTION 05 • خامساً</div>
+          <div class="section-title">أساسيات الخريطة</div>
+          <div class="section-subtitle">العناصر التي لا تكتمل الخريطة بدونها</div>
+        </div>
+        <div class="chevron">▾</div>
+      </div>
+      <div class="section-body">
+        <p class="intro-text">لا تكتمل الخريطة ولا يمكن أن تحقق هدفها في حالة خلوها من أي عنصر من عناصرها. هذه الأساسيات تعد جزءاً مكملاً لبعضها.</p>
+        <ul class="bullet-list">
+          <li><strong>الرموز:</strong> التعبير الكارتوجرافي عن الظواهر.</li>
+          <li><strong>الألوان:</strong> التمييز والتوضيح والدلالة.</li>
+          <li><strong>الخط والأسماء:</strong> التعريف والتوجيه.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-card pink" id="s6">
+      <div class="section-header" onclick="toggle('s6')">
+        <div class="section-icon">⑥</div>
+        <div class="section-meta">
+          <div class="section-number">SECTION 06 • سادساً</div>
+          <div class="section-title">توازن مكونات الخريطة</div>
+          <div class="section-subtitle">التوزيع البصري المناسب لتحقيق رضا المستخدم</div>
+        </div>
+        <div class="chevron">▾</div>
+      </div>
+      <div class="section-body">
+        <p class="intro-text">التوازن في التصميم البصري هو كيفية توزيع مكونات الخريطة بحيث تأخذ المواقع المناسبة لها ضمن لوحة الخريطة.</p>
+        <div style="font-size:13px;font-weight:700;color:var(--pink);margin-bottom:10px;font-family:'Tajawal',sans-serif;">يعتمد التوازن على عاملين:</div>
+        <ol class="numbered-list">
+          <li><strong>الأهمية البصرية للمكونات:</strong> حجم وكثافة ولون كل عنصر يحدد ثقله البصري على اللوحة.</li>
+          <li><strong>موقع المكونات:</strong> موضع كل عنصر داخل إطار الخريطة بالنسبة للوحة.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SUMMARY ══ -->
+  <div class="summary">
+    <h3>ملخص الفصل الأول</h3>
+    <div class="summary-items">
+      <div class="summary-item">
+        <div class="summary-item-dot" style="background:var(--teal);"></div>
+        <div class="summary-item-text"><strong>٦ مراحل التصميم</strong> من تعيين المشكلة إلى التنفيذ مع تغذية عكسية مستمرة.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-dot" style="background:var(--amber);"></div>
+        <div class="summary-item-text"><strong>٥ مبادئ:</strong> المضمون، الدقة، الوضوح، المستويات البصرية، الإدراك.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-dot" style="background:var(--coral);"></div>
+        <div class="summary-item-text"><strong>الاتصال الخرائطي:</strong> نقل المعلومة بصرياً — البصر يمثل ٨٣٪ من التعلم.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-dot" style="background:var(--blue);"></div>
+        <div class="summary-item-text"><strong>٣ عناصر:</strong> الرموز (اسمي/ترتيبي/بيني) + الألوان (HUE/VALUE/INTENSITY) + الخط.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-dot" style="background:var(--purple);"></div>
+        <div class="summary-item-text"><strong>الأساسيات:</strong> لا تكتمل الخريطة بدون كل عناصرها مجتمعة.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-dot" style="background:var(--pink);"></div>
+        <div class="summary-item-text"><strong>التوازن:</strong> الأهمية البصرية + موقع المكونات = رضا المستخدم.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── PRINT BAR ─── -->
+
+
+<script>
+  function toggle(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+  // Open first section by default
+  document.getElementById('s1').classList.add('open');
+</script>
+</body>
+</html>

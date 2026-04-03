@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقنيات المستخدمة في الحصول على البيانات المكانية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0f1e;
+    --bg-card: #0e1628;
+    --bg-card2: #111d35;
+    --accent1: #00d4ff;
+    --accent2: #7b5ea7;
+    --accent3: #ff6b35;
+    --accent4: #00e676;
+    --accent5: #ffb300;
+    --text-main: #e8f0fe;
+    --text-muted: #8899bb;
+    --border: rgba(0,212,255,0.15);
+    --glow: 0 0 30px rgba(0,212,255,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-main);
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    overflow-x: hidden;
+    direction: rtl;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 80% 80%, rgba(123,94,167,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 10% 60%, rgba(255,107,53,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--accent1);
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    animation: fadeSlideDown 0.8s ease both;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    animation: fadeSlideDown 0.8s 0.2s ease both;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 700px;
+    line-height: 1.9;
+    animation: fadeSlideDown 0.8s 0.4s ease both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    animation: bounce 2s infinite;
+    color: var(--accent1);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,30,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+
+  .nav-inner {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 14px 0;
+    scrollbar-width: none;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 25px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    background: rgba(0,212,255,0.1);
+    border-color: var(--accent1);
+    color: var(--accent1);
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 100px 40px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 60px;
+  }
+
+  .section-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .section-title h2 {
+    font-size: 2rem;
+    font-weight: 800;
+  }
+
+  .section-title p {
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-size: 0.95rem;
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100px; height: 100px;
+    border-radius: 0 20px 0 100%;
+    opacity: 0.07;
+    transition: all 0.4s;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    border-color: rgba(0,212,255,0.3);
+  }
+
+  .card-icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+
+  .card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-main);
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+
+  .card .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  /* COLOR THEMES */
+  .theme-cyan .card::before { background: var(--accent1); }
+  .theme-cyan .section-icon { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.2); }
+  .theme-cyan .section-title h2 { color: var(--accent1); }
+  .theme-cyan .card .tag { background: rgba(0,212,255,0.12); color: var(--accent1); border: 1px solid rgba(0,212,255,0.25); }
+
+  .theme-purple .card::before { background: var(--accent2); }
+  .theme-purple .section-icon { background: rgba(123,94,167,0.15); border: 1px solid rgba(123,94,167,0.3); }
+  .theme-purple .section-title h2 { color: #a57de8; }
+  .theme-purple .card .tag { background: rgba(123,94,167,0.15); color: #a57de8; border: 1px solid rgba(123,94,167,0.3); }
+
+  .theme-orange .card::before { background: var(--accent3); }
+  .theme-orange .section-icon { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.25); }
+  .theme-orange .section-title h2 { color: var(--accent3); }
+  .theme-orange .card .tag { background: rgba(255,107,53,0.12); color: var(--accent3); border: 1px solid rgba(255,107,53,0.3); }
+
+  .theme-green .card::before { background: var(--accent4); }
+  .theme-green .section-icon { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.2); }
+  .theme-green .section-title h2 { color: var(--accent4); }
+  .theme-green .card .tag { background: rgba(0,230,118,0.1); color: var(--accent4); border: 1px solid rgba(0,230,118,0.25); }
+
+  .theme-gold .card::before { background: var(--accent5); }
+  .theme-gold .section-icon { background: rgba(255,179,0,0.1); border: 1px solid rgba(255,179,0,0.2); }
+  .theme-gold .section-title h2 { color: var(--accent5); }
+  .theme-gold .card .tag { background: rgba(255,179,0,0.1); color: var(--accent5); border: 1px solid rgba(255,179,0,0.25); }
+
+  /* GPS TABLE */
+  .gps-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg-card);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .gps-table th {
+    background: rgba(0,212,255,0.08);
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--accent1);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .gps-table td {
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .gps-table tr:last-child td { border-bottom: none; }
+  .gps-table tr:hover td { background: rgba(0,212,255,0.04); color: var(--text-main); }
+
+  .gps-table td:first-child {
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  /* SATELLITE TABLE */
+  .sat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .sat-table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 24px;
+  }
+
+  .sat-table-wrap h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: var(--accent2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.88rem;
+  }
+
+  .sat-row:last-child { border-bottom: none; }
+  .sat-name { font-weight: 600; color: var(--text-main); }
+  .sat-res {
+    background: rgba(123,94,167,0.15);
+    border: 1px solid rgba(123,94,167,0.3);
+    color: #a57de8;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* MIND MAP */
+  .mindmap-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 20px 0;
+  }
+
+  .mindmap-svg {
+    width: 100%;
+    min-width: 900px;
+    height: 650px;
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-right: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent1), var(--accent2), var(--accent3));
+    border-radius: 2px;
+  }
+
+  .tl-item {
+    position: relative;
+    padding: 0 40px 40px 0;
+  }
+
+  .tl-dot {
+    position: absolute;
+    right: -7px;
+    top: 4px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 3px solid var(--bg-deep);
+  }
+
+  .tl-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    transition: all 0.3s;
+  }
+
+  .tl-content:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateX(-6px);
+  }
+
+  .tl-content h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .tl-content p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(0,212,255,0.06), rgba(123,94,167,0.06));
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 20px;
+    padding: 32px;
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top right, rgba(0,212,255,0.08), transparent 60%);
+    pointer-events: none;
+  }
+
+  .highlight-box h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 14px;
+  }
+
+  .highlight-box p {
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+
+  /* FEATURE LIST */
+  .feature-list {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  .feature-list li::before {
+    content: '◆';
+    color: var(--accent1);
+    font-size: 10px;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  /* ACCURACY METER */
+  .accuracy-bars {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .acc-bar-item label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+
+  .acc-bar-item label span:first-child { color: var(--text-main); font-weight: 600; }
+  .acc-bar-item label span:last-child { color: var(--text-muted); }
+
+  .acc-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .acc-fill {
+    height: 100%;
+    border-radius: 10px;
+    animation: fillBar 1.5s ease forwards;
+    transform-origin: right;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 60px 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+
+  @keyframes fillBar {
+    from { width: 0; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .section { padding: 60px 20px; }
+    .sat-grid { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+    .nav-inner { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-badge">📡 علم الخرائط والمساحة الرقمية</div>
+  <h1>التقنيات المستخدمة في<br><span>الحصول على البيانات المكانية</span></h1>
+  <p>رحلة شاملة عبر أدوات وتقنيات المساحة من الشريط والبوصلة التقليدية وصولاً إلى الليدار ثلاثي الأبعاد والأقمار الاصطناعية والطائرات بدون طيار</p>
+  <div class="scroll-hint">
+    <span>اسحب للأسفل</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="scrollTo('map')">🗺️ الخريطة الذهنية</button>
+    <button class="nav-btn" onclick="scrollTo('ground')">🔭 المساحة الأرضية</button>
+    <button class="nav-btn" onclick="scrollTo('gps')">📡 نظام GPS</button>
+    <button class="nav-btn" onclick="scrollTo('aerial')">✈️ الصور الجوية</button>
+    <button class="nav-btn" onclick="scrollTo('satellite')">🛰️ المرئيات الفضائية</button>
+    <button class="nav-btn" onclick="scrollTo('lidar')">🔴 الليدار</button>
+    <button class="nav-btn" onclick="scrollTo('drone')">🚁 الطائرات</button>
+  </div>
+</nav>
+
+<!-- MIND MAP SECTION -->
+<section id="map" class="section">
+  <div class="section-header">
+    <div class="section-icon theme-cyan" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">🗺️</div>
+    <div class="section-title">
+      <h2 style="color:var(--accent1)">الخريطة الذهنية الشاملة</h2>
+      <p>نظرة كاملة على التقنيات وعلاقاتها ببعضها</p>
+    </div>
+  </div>
+
+  <div class="mindmap-container">
+    <svg class="mindmap-svg" viewBox="0 0 1100 620" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="rgba(0,212,255,0.5)"/>
+        </marker>
+      </defs>
+
+      <!-- Center Node -->
+      <rect x="390" y="265" width="320" height="80" rx="20" fill="rgba(0,212,255,0.12)" stroke="#00d4ff" stroke-width="2" filter="url(#glow)"/>
+      <text x="550" y="298" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold" font-family="Cairo">البيانات المكانية</text>
+      <text x="550" y="326" text-anchor="middle" fill="rgba(0,212,255,0.7)" font-size="12" font-family="Cairo">تقنيات الحصول عليها</text>
+
+      <!-- Branch 1: Ground Surveying -->
+      <line x1="390" y1="300" x2="240" y2="160" stroke="rgba(0,212,255,0.35)" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="80" y="110" width="220" height="70" rx="14" fill="rgba(0,212,255,0.07)" stroke="rgba(0,212,255,0.4)" stroke-width="1.5"/>
+      <text x="190" y="141" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="bold" font-family="Cairo">المساحة الأرضية</text>
+      <text x="190" y="162" text-anchor="middle" fill="rgba(200,220,255,0.6)" font-size="10" font-family="Cairo">شريط • تيودوليت • توتال ستيشن</text>
+
+      <!-- Branch 2: GPS -->
+      <line x1="390" y1="290" x2="230" y2="305" stroke="rgba(0,230,118,0.35)" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="40" y="268" width="180" height="70" rx="14" fill="rgba(0,230,118,0.07)" stroke="rgba(0,230,118,0.4)" stroke-width="1.5"/>
+      <text x="130" y="299" text-anchor="middle" fill="#00e676" font-size="14" font-weight="bold" font-family="Cairo">نظام GPS</text>
+      <text x="130" y="320" text-anchor="middle" fill="rgba(200,220,255,0.6)" font-size="10" font-family="Cairo">ملاحي • GIS • هندسي</text>
+
+      <!-- Branch 3: Aerial Photos -->
+      <line x1="390" y1="330" x2="235" y2="440" stroke="rgba(255,179,0,0.35)" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="70" y="402" width="220" height="70" rx="14" fill="rgba(255,179,0,0.07)" stroke="rgba(255,179,0,0.4)" stroke-width="1.5"/>
+      <text x="180" y="433" text-anchor="middle" fill="#ffb300" font-size="13" font-weight="bold" font-family="Cairo">الصور الجوية</text>
+      <text x="180" y="454" text-anchor="middle" fill="rgba(200,220,255,0.6)" font-size="10" font-family="Cairo">مقياس الصورة • ارتفاع الطيران</text>
+
+      <!-- Branch 4: Satellite -->
+      <line x1="710" y1="300" x2="830" y2="160" stroke="rgba(123,94,167,0.45)" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="790" y="110" width="240" height="70" rx="14" fill="rgba(123,94,167,0.1)" stroke="rgba(123,94,167,0.5)" stroke-width="1.5"/>
+      <text x="910" y="141" text-anchor="middle" fill="#a57de8" font-size="13" font-weight="bold" font-family="Cairo">المرئيات الفضائية</text>
+      <text x="910" y="162" text-anchor="middle" fill="rgba(200,220,255,0.6)" font-size="10" font-family="Cairo">Landsat • SPOT • Ikonos</text>
+
+      <!-- Branch 5: LiDAR -->
+      <line x1="710" y1="290" x2="880" y2="305" stroke="rgba(255,107,53,0.4)" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="870" y="268" width="200" height="70" rx="14" fill="rgba(255,107,53,0.08)" stroke="rgba(255,107,53,0.45)" stroke-width="1.5"/>
+      <text x="970" y="299" text-anchor="middle" fill="#ff6b35" font-size="14" font-weight="bold" font-family="Cairo">الليدار</text>
+      <text x="970" y="320" text-anchor="middle" fill="rgba(200,220,255,0.6)" font-size="10" font-family="Cairo">جوي • أرضي • متحرك</text>
+
+      <!-- Branch 6: Drones -->
+      <line x1="710" y1="330" x2="840" y2="440" stroke="rgba(0,212,255,0.35)" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="780" y="402" width="230" height="70" rx="14" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.35)" stroke-width="1.5"/>
+      <text x="895" y="433" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="bold" font-family="Cairo">الطائرات بدون طيار</text>
+      <text x="895" y="454" text-anchor="middle" fill="rgba(200,220,255,0.6)" font-size="10" font-family="Cairo">Drones • UAV • تصوير جوي</text>
+
+      <!-- Sub nodes for GPS -->
+      <line x1="40" y1="290" x2="10" y2="220" stroke="rgba(0,230,118,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="-80" y="195" width="145" height="50" rx="10" fill="rgba(0,230,118,0.05)" stroke="rgba(0,230,118,0.25)" stroke-width="1"/>
+      <text x="35" y="218" text-anchor="middle" fill="rgba(0,230,118,0.8)" font-size="9" font-family="Cairo">دقة ±2-8 متر</text>
+      <text x="35" y="232" text-anchor="middle" fill="rgba(200,220,255,0.5)" font-size="9" font-family="Cairo">ملاحي</text>
+
+      <!-- Sub for Lidar -->
+      <line x1="1070" y1="290" x2="1090" y2="220" stroke="rgba(255,107,53,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="1045" y="185" width="160" height="50" rx="10" fill="rgba(255,107,53,0.05)" stroke="rgba(255,107,53,0.25)" stroke-width="1"/>
+      <text x="1125" y="207" text-anchor="middle" fill="rgba(255,107,53,0.8)" font-size="9" font-family="Cairo">150,000 نبضة/ثانية</text>
+      <text x="1125" y="221" text-anchor="middle" fill="rgba(200,220,255,0.5)" font-size="9" font-family="Cairo">سرعة قياس عالية</text>
+
+      <!-- Accuracy Classification bottom -->
+      <rect x="390" y="510" width="320" height="90" rx="16" fill="rgba(10,15,30,0.8)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <text x="550" y="538" text-anchor="middle" fill="rgba(200,220,255,0.5)" font-size="11" font-family="Cairo">تصنيف التمييز المكاني</text>
+
+      <rect x="400" y="550" width="58" height="22" rx="6" fill="rgba(0,212,255,0.15)"/>
+      <text x="429" y="565" text-anchor="middle" fill="#00d4ff" font-size="9" font-family="Cairo">مرتفع جداً</text>
+      <text x="429" y="579" text-anchor="middle" fill="rgba(0,212,255,0.6)" font-size="8" font-family="Cairo">&lt; 1م</text>
+
+      <rect x="465" y="550" width="52" height="22" rx="6" fill="rgba(0,230,118,0.12)"/>
+      <text x="491" y="565" text-anchor="middle" fill="#00e676" font-size="9" font-family="Cairo">مرتفع</text>
+      <text x="491" y="579" text-anchor="middle" fill="rgba(0,230,118,0.6)" font-size="8" font-family="Cairo">1-5م</text>
+
+      <rect x="524" y="550" width="52" height="22" rx="6" fill="rgba(255,179,0,0.12)"/>
+      <text x="550" y="565" text-anchor="middle" fill="#ffb300" font-size="9" font-family="Cairo">متوسط</text>
+      <text x="550" y="579" text-anchor="middle" fill="rgba(255,179,0,0.6)" font-size="8" font-family="Cairo">5-20م</text>
+
+      <rect x="583" y="550" width="52" height="22" rx="6" fill="rgba(255,107,53,0.12)"/>
+      <text x="609" y="565" text-anchor="middle" fill="#ff6b35" font-size="9" font-family="Cairo">منخفض</text>
+      <text x="609" y="579" text-anchor="middle" fill="rgba(255,107,53,0.6)" font-size="8" font-family="Cairo">20-50م</text>
+
+      <rect x="642" y="550" width="58" height="22" rx="6" fill="rgba(123,94,167,0.15)"/>
+      <text x="671" y="565" text-anchor="middle" fill="#a57de8" font-size="9" font-family="Cairo">منخفض جداً</text>
+      <text x="671" y="579" text-anchor="middle" fill="rgba(123,94,167,0.6)" font-size="8" font-family="Cairo">&gt; 50م</text>
+
+      <line x1="550" y1="345" x2="550" y2="510" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4,3"/>
+    </svg>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- GROUND SURVEY -->
+<section id="ground" class="section theme-cyan fade-in">
+  <div class="section-header">
+    <div class="section-icon">🔭</div>
+    <div class="section-title">
+      <h2>١. تقنيات المساحة الأرضية</h2>
+      <p>من الشريط البدائي إلى جهاز التوتال ستيشن الإلكتروني</p>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#00d4ff;"></div>
+      <div class="tl-content">
+        <h4>🪢 الأدوات التقليدية (الشريط والبوصلة)</h4>
+        <p>البداية كانت باستخدام <strong style="color:var(--accent1)">الشريط</strong> لقياس المسافات القصيرة كأبعاد المنشآت وعرض الطرق، ثم <strong style="color:var(--accent1)">البوصلة</strong> لتحديد الاتجاهات. تُستخدم حتى الآن في الأعمال البسيطة والمرفوضة تقنياً.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#00b4d8;"></div>
+      <div class="tl-content">
+        <h4>📐 التيودوليت البصري والرقمي</h4>
+        <p>يُعد التيودوليت نقلة حقيقية في عالم المساحة؛ بدأ <strong style="color:var(--accent1)">بصرياً</strong> ثم تطور إلى <strong style="color:var(--accent1)">رقمي</strong>، وهو جهاز لقياس الزوايا الأفقية والرأسية بدقة عالية، استُخدم في بناء الشبكات الجيوديسية والمثلثات.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#0096c7;"></div>
+      <div class="tl-content">
+        <h4>⚡ أجهزة قياس المسافات الإلكترونية (EDM)</h4>
+        <p>تعتمد على إرسال <strong style="color:var(--accent1)">موجات إشعاعية</strong> تنعكس على عاكس خاص وترتد للجهاز. تُقسم حسب مداها:</p>
+        <ul class="feature-list">
+          <li><strong>مدى قصير (حتى 2 كم):</strong> للمضلعات والرفع التفصيلي والهندسة المدنية</li>
+          <li><strong>مدى متوسط (حتى 15 كم):</strong> للشبكات الجيوديسية من الدرجة الثانية والثالثة</li>
+          <li><strong>مدى طويل (حتى 60 كم):</strong> للشبكات الجيوديسية من الدرجة الأولى</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#48cae4;"></div>
+      <div class="tl-content">
+        <h4>🎯 التوتال ستيشن (الجهاز المتكامل)</h4>
+        <p>أحدث أجهزة المساحة الأرضية وأدقها؛ يجمع بين قياس المسافات والزوايا في آنٍ واحد، ويُخرج معظم القياسات اللازمة لعمليات الرفع والتوقيع. <strong style="color:var(--accent1)">يُعد الأدق مساحياً</strong> لكنه يُستخدم في المساحات الصغيرة والخرائط التفصيلية نظراً لتكلفته المرتفعة.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- GPS -->
+<section id="gps" class="section theme-green fade-in">
+  <div class="section-header">
+    <div class="section-icon">📡</div>
+    <div class="section-title">
+      <h2>٢. نظام تحديد المواقع العالمي (GPS)</h2>
+      <p>ثلاثة أنواع من الأجهزة — كل منها لغرض ودقة مختلفة</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-bottom:40px;">
+    <h3>💡 ما هو GPS؟</h3>
+    <p>نظام GPS هو وسيلة لجمع وحصر المعلومات في مجالات علمية مختلفة، تُساهم في تصميم قواعد معلومات بأسرع طريقة وعلى درجة عالية من الدقة. تختلف استخداماته حسب الدقة المطلوبة: من مجرد الاسترشاد والتوجيه، إلى بناء قواعد المعلومات الجغرافية، وصولاً إلى المسح الجيوديسي الدقيق.</p>
+  </div>
+
+  <div class="cards-grid" style="margin-bottom:50px;">
+    <div class="card">
+      <div class="card-icon">🧭</div>
+      <h3>الأجهزة الملاحية (محمولة يدوياً)</h3>
+      <p>مثل أجهزة <strong>Garmin</strong> و<strong>Magellan</strong>، تعطي دقة أفقية ±2 إلى ±8 متر، وتصل الدقة الرأسية إلى ±12 متر. تناسب <strong style="color:var(--accent4)">الخرائط المتوسطة وصغيرة المقياس</strong> (1:25,000 أو أصغر).</p>
+      <span class="tag">دقة: ±2–8 متر</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗂️</div>
+      <h3>أجهزة نظم المعلومات الجغرافية (GIS)</h3>
+      <p>أجهزة متخصصة تعطي دقة أفقية <strong>أقل من 1 متر</strong> في الغالب، وتناسب الخرائط من مقياس 1:5,000. الدقة الرأسية حوالي ±1.5 متر، مناسبة للخرائط الكنتورية من 1:10,000.</p>
+      <span class="tag">دقة: &lt; 1 متر</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏗️</div>
+      <h3>الأجهزة الهندسية (جيوديسية)</h3>
+      <p>أعلى أنواع أجهزة GPS دقةً، حيث قد تصل الدقة الأفقية والرأسية إلى <strong style="color:var(--accent4)">بضعة سنتيمترات</strong>. تناسب جميع أنواع الخرائط بمختلف مقاييسها وتُستخدم في المشاريع الهندسية الكبرى.</p>
+      <span class="tag">دقة: سنتيمترات</span>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:20px; color:var(--accent4); font-size:1.1rem;">📊 مقارنة دقة الأجهزة مع مقاييس الخرائط</h3>
+  <div style="overflow-x:auto; border-radius:20px;">
+    <table class="gps-table">
+      <thead>
+        <tr>
+          <th>المواصفة</th>
+          <th>ملاحي / يدوي</th>
+          <th>GIS</th>
+          <th>هندسي / جيوديسي</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الدقة الأفقية</td>
+          <td>±2 – 8 متر</td>
+          <td>±1 متر</td>
+          <td>±سنتيمترات</td>
+        </tr>
+        <tr>
+          <td>الدقة الرأسية</td>
+          <td>±12 متر</td>
+          <td>±1.5 متر</td>
+          <td>±سنتيمترات</td>
+        </tr>
+        <tr>
+          <td>خريطة غير كنتورية</td>
+          <td>1:25,000 أو أصغر</td>
+          <td>1:5,000 أو أصغر</td>
+          <td>جميع المقاييس</td>
+        </tr>
+        <tr>
+          <td>خريطة كنتورية</td>
+          <td>1:250,000 أو أصغر</td>
+          <td>1:10,000 أو أصغر</td>
+          <td>جميع المقاييس</td>
+        </tr>
+        <tr>
+          <td>الفترة الكنتورية</td>
+          <td>15 متر أو أكبر</td>
+          <td>2 متر أو أكبر</td>
+          <td>أكبر من 0.1 متر</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box" style="margin-top:40px;">
+    <h3>⚠️ عوامل تؤثر على دقة GPS</h3>
+    <ul class="feature-list">
+      <li>أخطاء خاصة بموضع القمر الاصطناعي</li>
+      <li>أخطاء انتشار الإشارة في طبقتي الأيونوسفير والتروبوسفير</li>
+      <li>أخطاء خاصة بنظام الالتقاط نفسه</li>
+    </ul>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- AERIAL PHOTOS -->
+<section id="aerial" class="section theme-gold fade-in">
+  <div class="section-header">
+    <div class="section-icon">✈️</div>
+    <div class="section-title">
+      <h2>٣. الصور الجوية</h2>
+      <p>التقنية الرئيسية في إنتاج الخرائط الطبوغرافية المصرية حتى الآن</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-bottom:40px;">
+    <h3>📷 ما أهمية الصورة الجوية؟</h3>
+    <p>تُعد الصور الجوية من أقدم التقنيات المستخدمة في المساحة وإنتاج الخرائط. مرت بمراحل تطور كثيرة حتى أصبحت التقنية الرئيسية في إنتاج الخرائط الطبوغرافية. تتأثر جودتها بعدة عوامل: <strong style="color:var(--accent5)">مقياس الصورة، ارتفاع الطيران، دقة كاميرات التصوير، والعوامل الجوية.</strong></p>
+  </div>
+
+  <h3 style="margin-bottom:20px; color:var(--accent5); font-size:1.1rem;">📐 العلاقة بين مقياس الصورة وارتفاع الطيران والخريطة</h3>
+  <div style="overflow-x:auto; border-radius:20px; margin-bottom:40px;">
+    <table class="gps-table">
+      <thead>
+        <tr>
+          <th>مقياس الخريطة</th>
+          <th>مقياس الصورة الجوية</th>
+          <th>ارتفاع الطيران (م)</th>
+          <th>الفاصل الكنتوري (م)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1:500</td><td>1:3,000</td><td>450</td><td>0.5</td></tr>
+        <tr><td>1:1,000</td><td>1:5,000</td><td>750</td><td>1</td></tr>
+        <tr><td>1:2,500</td><td>1:10,000</td><td>1,500</td><td>2</td></tr>
+        <tr><td>1:10,000</td><td>1:25,000</td><td>3,750</td><td>5</td></tr>
+        <tr><td>1:50,000</td><td>1:50,000</td><td>7,500</td><td>10</td></tr>
+        <tr><td>1:100,000</td><td>1:80,000</td><td>12,000</td><td>20</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card" style="grid-column:span 2;">
+      <div class="card-icon">💡</div>
+      <h3>مثال عملي على التكلفة والعدد</h3>
+      <p>لمنطقة مساحتها <strong style="color:var(--accent5)">100 كم²</strong> والهدف إنتاج خرائط تفصيلية:</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div style="background:rgba(255,179,0,0.08);border:1px solid rgba(255,179,0,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:2rem; font-weight:900; color:var(--accent5);">278</div>
+          <div style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">صورة جوية بمقياس 1:5,000</div>
+        </div>
+        <div style="background:rgba(255,179,0,0.05);border:1px solid rgba(255,179,0,0.15);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:2rem; font-weight:900; color:var(--accent5);">71</div>
+          <div style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">صورة جوية بمقياس 1:10,000</div>
+        </div>
+      </div>
+      <p style="margin-top:16px; font-size:0.88rem; color:var(--text-muted);">كلما زاد مقياس الصورة زادت التفاصيل وزادت التكلفة. لذلك يجب تحديد الهدف أولاً لاختيار المقياس الأنسب.</p>
+      <span class="tag">اقتصاديات المساحة الجوية</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SATELLITE -->
+<section id="satellite" class="section theme-purple fade-in">
+  <div class="section-header">
+    <div class="section-icon">🛰️</div>
+    <div class="section-title">
+      <h2>٤. المرئيات الفضائية</h2>
+      <p>أساس بناء الخريطة الجغرافية الحديثة وتحديثها</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-bottom:40px;">
+    <h3>🌍 دور المرئيات الفضائية</h3>
+    <p>تُعد المرئية الفضائية أساس بناء الخريطة الجغرافية، حيث يتم إخضاعها لعمليات التحديث والمراجعة من خلال الحصول على مرئيات حديثة. ساهم التصوير الفضائي في حل مشكلات كثيرة كصعوبة تنفيذ الأعمال الحقلية لكثير من الظواهر الجغرافية.</p>
+  </div>
+
+  <div class="sat-grid">
+    <div class="sat-table-wrap">
+      <h4>🎨 المرئيات الملونة (Multi-spectral)</h4>
+      <div class="sat-row"><span class="sat-name">Landsat-7</span><span class="sat-res">30 متر</span></div>
+      <div class="sat-row"><span class="sat-name">ASTER</span><span class="sat-res">90 متر</span></div>
+      <div class="sat-row"><span class="sat-name">SPOT-5</span><span class="sat-res">10 متر</span></div>
+      <div class="sat-row"><span class="sat-name">EgyptSat-1</span><span class="sat-res">7.8 متر</span></div>
+      <div class="sat-row"><span class="sat-name">IRS</span><span class="sat-res">5.8 متر</span></div>
+      <div class="sat-row"><span class="sat-name">Ikonos-2</span><span class="sat-res">4 متر</span></div>
+      <div class="sat-row"><span class="sat-name">QuickBird</span><span class="sat-res">2.6 متر</span></div>
+      <div class="sat-row"><span class="sat-name">GeoEye-1</span><span class="sat-res">1.65 متر</span></div>
+      <div class="sat-row"><span class="sat-name">WorldView-2</span><span class="sat-res">1.8 متر</span></div>
+    </div>
+    <div class="sat-table-wrap">
+      <h4>⬛ المرئيات غير الملونة (Panchromatic)</h4>
+      <div class="sat-row"><span class="sat-name">Landsat-7</span><span class="sat-res">15 متر</span></div>
+      <div class="sat-row"><span class="sat-name">ASTER</span><span class="sat-res">15 متر</span></div>
+      <div class="sat-row"><span class="sat-name">SPOT-5</span><span class="sat-res">7.8 متر</span></div>
+      <div class="sat-row"><span class="sat-name">EgyptSat-1</span><span class="sat-res">2.5 متر</span></div>
+      <div class="sat-row"><span class="sat-name">IRS</span><span class="sat-res">5.8 متر</span></div>
+      <div class="sat-row"><span class="sat-name">Ikonos-2</span><span class="sat-res">1 متر</span></div>
+      <div class="sat-row"><span class="sat-name">QuickBird</span><span class="sat-res">0.61 متر</span></div>
+      <div class="sat-row"><span class="sat-name">GeoEye-1</span><span class="sat-res">0.41 متر</span></div>
+    </div>
+  </div>
+
+  <h3 style="margin:40px 0 20px; color:#a57de8; font-size:1.05rem;">🎯 تصنيف التمييز المكاني</h3>
+  <div class="accuracy-bars">
+    <div class="acc-bar-item">
+      <label><span>مرتفع جداً</span><span>أقل من 1 متر (Ikonos, QuickBird)</span></label>
+      <div class="acc-bar"><div class="acc-fill" style="width:95%; background:linear-gradient(90deg,#00d4ff,#00e676);"></div></div>
+    </div>
+    <div class="acc-bar-item">
+      <label><span>مرتفع</span><span>1 – 5 متر (SPOT-5, EgyptSat)</span></label>
+      <div class="acc-bar"><div class="acc-fill" style="width:75%; background:linear-gradient(90deg,#00e676,#ffb300);"></div></div>
+    </div>
+    <div class="acc-bar-item">
+      <label><span>متوسط</span><span>5 – 20 متر (Landsat Pan)</span></label>
+      <div class="acc-bar"><div class="acc-fill" style="width:50%; background:linear-gradient(90deg,#ffb300,#ff6b35);"></div></div>
+    </div>
+    <div class="acc-bar-item">
+      <label><span>منخفض</span><span>20 – 50 متر</span></label>
+      <div class="acc-bar"><div class="acc-fill" style="width:30%; background:linear-gradient(90deg,#ff6b35,#e63946);"></div></div>
+    </div>
+    <div class="acc-bar-item">
+      <label><span>منخفض جداً</span><span>أكثر من 50 متر (ASTER multi)</span></label>
+      <div class="acc-bar"><div class="acc-fill" style="width:12%; background:#e63946;"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- LIDAR -->
+<section id="lidar" class="section theme-orange fade-in">
+  <div class="section-header">
+    <div class="section-icon">🔴</div>
+    <div class="section-title">
+      <h2>٥. المسح الليزري ثلاثي الأبعاد (LiDAR)</h2>
+      <p>Light Detection and Ranging — الثورة في القياسات المكانية</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-bottom:40px;">
+    <h3>🔴 ما هو الليدار؟</h3>
+    <p>الليدار تقنية استشعار عن بعد بصرية تستخدم ضوء الليزر لتصوير سطح الأرض وإنتاج قياسات دقيقة للغاية. تُنتج هذه التقنية <strong style="color:var(--accent3)">غمامة نقطية ثلاثية الأبعاد (Point Cloud)</strong> للجسم الممسوح، يمكن إدارتها وتحليلها عبر برامج نظم المعلومات الجغرافية. يستطيع الليدار قياس سطح الأرض بمعدل <strong style="color:var(--accent3)">150,000 نبضة في الثانية</strong>.</p>
+  </div>
+
+  <div class="cards-grid" style="margin-bottom:40px;">
+    <div class="card">
+      <div class="card-icon">✈️</div>
+      <h3>الليدار الجوي (Airborne LiDAR)</h3>
+      <p>أجهزة مثبتة على طائرات، وهي الأكثر تفصيلاً ودقة لإنشاء نماذج الارتفاع الرقمية (DEM) ونماذج السطح الرقمية (DSM). يأتي بنوعين:</p>
+      <ul class="feature-list" style="margin-top:12px;">
+        <li><strong>طبوغرافي:</strong> لإنتاج نماذج ارتفاعات المناطق الواسعة</li>
+        <li><strong>باثيمتري (ليدار الأعماق):</strong> يخترق الماء ويُستخدم للمسطحات المائية</li>
+      </ul>
+      <span class="tag">Airborne LiDAR</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">📍</div>
+      <h3>الليدار الأرضي الثابت (TLS)</h3>
+      <p>يُستخدم عندما يكون الجهاز على سطح الأرض ثابتاً. الأكثر شيوعاً في:</p>
+      <ul class="feature-list" style="margin-top:12px;">
+        <li>الطبوغرافيا التقليدية والرصد</li>
+        <li>توثيق التراث الثقافي (Cultural Heritage)</li>
+        <li>إنشاء نماذج ثلاثية الأبعاد للمدن والمنشآت</li>
+      </ul>
+      <span class="tag">Terrestrial LiDAR</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚗</div>
+      <h3>نظام رسم الخرائط المتحرك (MMS)</h3>
+      <p>ماسح ليزري واحد أو أكثر مثبت على مركبة متحركة (سيارة، قارب، قطار). مثالي لمسح:</p>
+      <ul class="feature-list" style="margin-top:12px;">
+        <li>الشوارع وخطوط الكهرباء</li>
+        <li>ارتفاعات الجسور الدقيقة</li>
+        <li>حدود الأشجار والمنشآت</li>
+      </ul>
+      <span class="tag">Mobile Mapping</span>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:20px; color:var(--accent3); font-size:1.05rem;">🔧 مكونات نظام الليدار</h3>
+  <div class="cards-grid">
+    <div class="card" style="padding:20px;">
+      <p style="font-size:1.5rem; margin-bottom:8px;">🔦</p>
+      <h3 style="font-size:0.95rem;">الماسح الضوئي بالليزر</h3>
+      <p style="font-size:0.85rem;">يُطلق نبضات ليزرية ويلتقط الانعكاسات</p>
+    </div>
+    <div class="card" style="padding:20px;">
+      <p style="font-size:1.5rem; margin-bottom:8px;">📡</p>
+      <h3 style="font-size:0.95rem;">جهاز GPS</h3>
+      <p style="font-size:0.85rem;">لتحديد الموقع المطلق للمستشعر فوق سطح الأرض</p>
+    </div>
+    <div class="card" style="padding:20px;">
+      <p style="font-size:1.5rem; margin-bottom:8px;">⏱️</p>
+      <h3 style="font-size:0.95rem;">ساعة عالية الدقة</h3>
+      <p style="font-size:0.85rem;">لتسجيل وقت مغادرة وعودة نبضة الليزر</p>
+    </div>
+    <div class="card" style="padding:20px;">
+      <p style="font-size:1.5rem; margin-bottom:8px;">🧭</p>
+      <h3 style="font-size:0.95rem;">نظام الملاحة بالقصور الذاتي (IMU)</h3>
+      <p style="font-size:0.85rem;">يقيس زوايا اتجاه الطائرة لضمان دقة X و Y و Z</p>
+    </div>
+    <div class="card" style="padding:20px;">
+      <p style="font-size:1.5rem; margin-bottom:8px;">💻</p>
+      <h3 style="font-size:0.95rem;">حاسب آلي</h3>
+      <p style="font-size:0.85rem;">لتخزين وتحليل البيانات الضخمة</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:40px;">
+    <h3>✨ مميزات تقنية الليدار الفريدة</h3>
+    <ul class="feature-list">
+      <li>تجمع البيانات أثناء <strong style="color:var(--accent3)">الليل</strong> (لا تحتاج ضوء الشمس)</li>
+      <li>قادرة على <strong style="color:var(--accent3)">اختراق الغيوم والأمطار والضباب الكثيف</strong></li>
+      <li>قياس سطح الأرض بسرعة تصل إلى <strong style="color:var(--accent3)">150,000 نبضة في الثانية</strong></li>
+      <li>حساب إحداثيات ثلاثية الأبعاد من فرق الوقت وزاوية الليزر والموقع المطلق</li>
+    </ul>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- DRONES -->
+<section id="drone" class="section theme-cyan fade-in">
+  <div class="section-header">
+    <div class="section-icon">🚁</div>
+    <div class="section-title">
+      <h2>٦. الطائرات بدون طيار (Drones / UAV)</h2>
+      <p>الثورة الحديثة في جمع البيانات المكانية بتكلفة زهيدة</p>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <h3>توفير الوقت</h3>
+      <p>كفاءة أكبر في وقت أقصر. يمكن قضاء وقت أقل بكثير في جمع البيانات الميدانية مقارنة بالطرق التقليدية.</p>
+      <span class="tag">الكفاءة</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h3>التكلفة الزهيدة</h3>
+      <p>تكلفة التصوير أقل بكثير من الهليكوبتر أو الطائرات العادية. يمكن أن تصل التكلفة إلى <strong style="color:var(--accent1)">أقل من الربع</strong>، وتكلفة شراء طائرة ذات جودة عالية مع كاميرا لا تتجاوز بضع مئات من الدولارات.</p>
+      <span class="tag">الاقتصاد</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">⛰️</div>
+      <h3>الوصول للأماكن الخطرة</h3>
+      <p>تصل إلى أماكن يصعب الوصول إليها: التضاريس الصعبة، المباني المنهارة، المواقع المرتفعة، المناطق النشطة بركانياً، محطات التوتر العالي، الجروف الصخرية.</p>
+      <span class="tag">الأمان</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>تعدد أنماط البيانات</h3>
+      <p>الكاميرا الرقمية تُعطي صوراً عالية الدقة، وأجهزة LiDAR تُعطي غمامات نقطية 3D. بدمجهما نحصل على <strong style="color:var(--accent1)">نمذجة واقعية ثلاثية الأبعاد</strong>. كما يمكن التصوير الحراري بكاميرا خاصة.</p>
+      <span class="tag">التنوع</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎮</div>
+      <h3>سهولة الاستخدام</h3>
+      <p>تقنية GPS الموجودة في الطائرات تُسهّل التحكم بها. يمكن رسم مخطط الطيران على برنامج الكمبيوتر أو الهاتف الذكي، ثم تُنفذ الطائرة باقي العمل تلقائياً.</p>
+      <span class="tag">الأتمتة</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>التخلي عن نقاط التحكم الأرضية</h3>
+      <p>الحصول على دقة عالية في مرحلة المسح دون الحاجة لنقاط تحكم أرضية، حيث تُنجز عملية الضبط عن طريق <strong style="color:var(--accent1)">الإسناد الجغرافي المباشر</strong>.</p>
+      <span class="tag">الدقة</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="margin-bottom:16px; font-size:1.5rem;">🛰️</div>
+  <p style="font-weight:700; color:var(--text-main); margin-bottom:8px;">التقنيات المستخدمة في الحصول على البيانات المكانية</p>
+  <p>من المساحة الأرضية التقليدية إلى الاستشعار عن بعد الحديث</p>
+  <div style="margin-top:24px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+    <span style="padding:6px 16px; background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.2); border-radius:20px; font-size:12px; color:var(--accent1);">GPS</span>
+    <span style="padding:6px 16px; background:rgba(123,94,167,0.1); border:1px solid rgba(123,94,167,0.25); border-radius:20px; font-size:12px; color:#a57de8;">Remote Sensing</span>
+    <span style="padding:6px 16px; background:rgba(255,107,53,0.08); border:1px solid rgba(255,107,53,0.2); border-radius:20px; font-size:12px; color:var(--accent3);">LiDAR</span>
+    <span style="padding:6px 16px; background:rgba(0,230,118,0.08); border:1px solid rgba(0,230,118,0.2); border-radius:20px; font-size:12px; color:var(--accent4);">GIS</span>
+    <span style="padding:6px 16px; background:rgba(255,179,0,0.08); border:1px solid rgba(255,179,0,0.2); border-radius:20px; font-size:12px; color:var(--accent5);">Photogrammetry</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll to section
+  function scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  // Intersection observer for fade-in
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+  // Nav active on scroll
+  const sections = ['map','ground','gps','aerial','satellite','lidar','drone'];
+  const navBtns = document.querySelectorAll('.nav-btn');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 200) current = id;
+    });
+    navBtns.forEach((btn, i) => {
+      btn.classList.toggle('active', i === sections.indexOf(current));
+    });
+  });
+</script>
+</body>
+</html>
