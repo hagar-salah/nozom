@@ -145,11 +145,13 @@
       padding: 8px 20px;
       border-radius: 60px;
       margin-left: 10px;
+      flex-wrap: wrap;
     }
     .dropdown-wrapper label {
       font-weight: 600;
       color: #5a3e26;
       font-size: 0.9rem;
+      white-space: nowrap;
     }
     .subject-dropdown {
       padding: 8px 16px;
@@ -182,6 +184,7 @@
       cursor: pointer;
       transition: 0.2s;
       font-family: 'Tajawal', sans-serif;
+      white-space: nowrap;
     }
     .btn-go:hover {
       background: #a56e1f;
@@ -226,23 +229,58 @@
       font-size: 0.85rem;
     }
 
+    /* ========== التعديلات الخاصة بالجوال فقط ========== */
     @media (max-width: 700px) {
       .navbar {
         flex-direction: column;
         gap: 10px;
       }
+      
       .subject-header {
         flex-direction: column;
         align-items: flex-start;
       }
+      
+      /* ضبط الـ dropdown wrapper عشان يظهر صح في الموبايل */
       .dropdown-wrapper {
         width: 100%;
         justify-content: space-between;
         margin-left: 0;
-        margin-top: 10px;
+        margin-top: 15px;
+        padding: 12px 16px;
+        gap: 10px;
+        flex-wrap: wrap;
       }
+      
+      /* خلي الـ dropdown ياخد مساحة مرنة */
       .subject-dropdown {
         flex: 1;
+        min-width: 140px;
+        width: auto;
+      }
+      
+      /* الزر يظهر جنب الـ dropdown من غير ما يضيع */
+      .btn-go {
+        flex-shrink: 0;
+        padding: 8px 20px;
+      }
+      
+      /* لو الشاشة ضيقة جداً (اقل من 450px) يبقى كل حاجة تحت بعض */
+      @media (max-width: 450px) {
+        .dropdown-wrapper {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        
+        .dropdown-wrapper label {
+          white-space: normal;
+          text-align: right;
+        }
+        
+        .btn-go {
+          width: 100%;
+          padding: 10px;
+        }
       }
     }
   </style>
@@ -336,7 +374,7 @@
     const newmapDropdown = document.getElementById('newmapDropdown');
     const goNewmapBtn = document.getElementById('goNewmapBtn');
     
-    // دالة انتقال آمنة (تفتح الرابط في نفس التبويب أو نافذة جديدة حسب الرغبة، نفضل نفس التبويب)
+    // دالة انتقال آمنة (تفتح الرابط في نفس التبويب)
     function navigateTo(url) {
       if (url && url !== '#' && url !== '') {
         window.location.href = url;
@@ -349,10 +387,6 @@
         const selectedVal = gisDropdown.value;
         if (selectedVal && selectedVal !== '#') {
           navigateTo(selectedVal);
-        } else {
-          // بدون alert - فقط لا يحدث شيء (أو يمكن توجيه إلى الصفحة الرئيسية)
-          // حسب متطلبات المستخدم "لا alert" نفضل الصمت التام.
-          return;
         }
       });
     }
@@ -367,7 +401,7 @@
       });
     }
     
-    // اختياري: دعم الضغط على Enter في القائمة (ليس ضرورياً لكنه تحسن بسيط)
+    // دعم الضغط على Enter في القائمة
     if (gisDropdown) {
       gisDropdown.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -386,14 +420,6 @@
         }
       });
     }
-    
-    // تأكيد إضافي: لا توجد أي رسائل تنبيه (alert) في الكود نهائياً.
-    // جميع الروابط تعمل بشكل طبيعي: index2,3,4 لمادة GIS و index5,6,7,8 لمادة خرائط اليه الجديدة.
-    // تم تعطيل الخيارات الغير مرغوب فيها في قائمة GIS (index5,6,7,8 معطلة وتبدو رمادية).
-    // بينما في مادة خرائط اليه، الخيارات (index5, index6, index7, index8) فقط هي النشطة، مع خيارات إضافية معطلة.
-    
-    // للتأكد من عدم وجود أي alert قديم - تم حذف كل الـ alert() من الصفحة بالكامل
-    console.log("الصفحة جاهزة، لا توجد رسائل تنبيه، والـ dropdown يعمل بسلاسة.");
   </script>
 </body>
 </html>
